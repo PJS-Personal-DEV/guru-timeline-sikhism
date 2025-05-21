@@ -1,225 +1,323 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 type Language = 'en' | 'pa';
 
+interface Translations {
+  [key: string]: { [key in Language]: string };
+}
+
+const translations: Translations = {
+  sikhHistoryTimeline: {
+    en: 'Sikh History Timeline',
+    pa: 'ਸਿੱਖ ਇਤਿਹਾਸ ਕਾਲਕ੍ਰਮ',
+  },
+  heroTitle: {
+    en: 'Journey Through Sikh History',
+    pa: 'ਸਿੱਖ ਇਤਿਹਾਸ ਦੀ ਯਾਤਰਾ',
+  },
+  heroSubtitle: {
+    en: 'Explore the rich history and heritage of Sikhism from the birth of Guru Nanak Dev Ji to modern times',
+    pa: 'ਗੁਰੂ ਨਾਨਕ ਦੇਵ ਜੀ ਦੇ ਜਨਮ ਤੋਂ ਲੈ ਕੇ ਆਧੁਨਿਕ ਸਮੇਂ ਤੱਕ ਸਿੱਖੀ ਦੇ ਅਮੀਰ ਇਤਿਹਾਸ ਅਤੇ ਵਿਰਾਸਤ ਦੀ ਪੜਚੋਲ ਕਰੋ',
+  },
+  exploreTimeline: {
+    en: 'Explore Timeline',
+    pa: 'ਕਾਲਕ੍ਰਮ ਦੀ ਪੜਚੋਲ ਕਰੋ',
+  },
+  timelineTitle: {
+    en: 'Sikh History Timeline',
+    pa: 'ਸਿੱਖ ਇਤਿਹਾਸ ਕਾਲਕ੍ਰਮ',
+  },
+  aboutSikhHistory: {
+    en: 'About Sikh History',
+    pa: 'ਸਿੱਖ ਇਤਿਹਾਸ ਬਾਰੇ',
+  },
+  sikhismIntro1: {
+    en: 'Sikhism emerged in the Punjab region of South Asia in the 15th century under the spiritual leadership of Guru Nanak Dev Ji. The religion developed through the teachings of ten Gurus, with the eleventh and eternal Guru being the Guru Granth Sahib, the holy scripture.',
+    pa: 'ਸਿੱਖ ਧਰਮ 15ਵੀਂ ਸਦੀ ਵਿੱਚ ਦੱਖਣੀ ਏਸ਼ੀਆ ਦੇ ਪੰਜਾਬ ਖੇਤਰ ਵਿੱਚ ਗੁਰੂ ਨਾਨਕ ਦੇਵ ਜੀ ਦੀ ਅਧਿਆਤਮਕ ਅਗਵਾਈ ਹੇਠ ਉਭਰਿਆ। ਇਹ ਧਰਮ ਦਸ ਗੁਰੂਆਂ ਦੀਆਂ ਸਿੱਖਿਆਵਾਂ ਦੁਆਰਾ ਵਿਕਸਿਤ ਹੋਇਆ, ਜਿਸ ਵਿੱਚ ਗਿਆਰ੍ਹਵੇਂ ਅਤੇ ਸਦੀਵੀ ਗੁਰੂ ਗ੍ਰੰਥ ਸਾਹਿਬ ਜੀ, ਪਵਿੱਤਰ ਧਰਮ ਗ੍ਰੰਥ ਹਨ।',
+  },
+  sikhismIntro2: {
+    en: 'The timeline below chronicles key moments in Sikh history, from the birth of Guru Nanak Dev Ji in 1469 to significant events in modern times. The journey includes the establishment of key institutions, battles for religious freedom, and the formation of the Khalsa by Guru Gobind Singh Ji.',
+    pa: 'ਹੇਠਾਂ ਦਿੱਤਾ ਕਾਲਕ੍ਰਮ 1469 ਵਿੱਚ ਗੁਰੂ ਨਾਨਕ ਦੇਵ ਜੀ ਦੇ ਜਨਮ ਤੋਂ ਲੈ ਕੇ ਆਧੁਨਿਕ ਸਮੇਂ ਦੀਆਂ ਮਹੱਤਵਪੂਰਨ ਘਟਨਾਵਾਂ ਤੱਕ, ਸਿੱਖ ਇਤਿਹਾਸ ਦੇ ਮੁੱਖ ਪਲਾਂ ਦਾ ਵਰਨਣ ਕਰਦਾ ਹੈ। ਇਸ ਯਾਤਰਾ ਵਿੱਚ ਮੁੱਖ ਸੰਸਥਾਵਾਂ ਦੀ ਸਥਾਪਨਾ, ਧਾਰਮਿਕ ਆਜ਼ਾਦੀ ਲਈ ਲੜਾਈਆਂ, ਅਤੇ ਗੁਰੂ ਗੋਬਿੰਦ ਸਿੰਘ ਜੀ ਦੁਆਰਾ ਖਾਲਸਾ ਦੀ ਸਥਾਪਨਾ ਸ਼ਾਮਲ ਹੈ।',
+  },
+  sikhismIntro3: {
+    en: 'Sikhism emphasizes the pursuit of justice, equality, and service to humanity, principles that have guided the community through centuries of challenges and achievements.',
+    pa: 'ਸਿੱਖ ਧਰਮ ਨਿਆਂ, ਬਰਾਬਰੀ, ਅਤੇ ਮਨੁੱਖਤਾ ਦੀ ਸੇਵਾ ਦੀ ਪ੍ਰਾਪਤੀ 'ਤੇ ਜ਼ੋਰ ਦਿੰਦਾ ਹੈ, ਅਜਿਹੇ ਸਿਧਾਂਤ ਜਿਨ੍ਹਾਂ ਨੇ ਸਦੀਆਂ ਦੀਆਂ ਚੁਣੌਤੀਆਂ ਅਤੇ ਪ੍ਰਾਪਤੀਆਂ ਦੌਰਾਨ ਭਾਈਚਾਰੇ ਦੀ ਅਗਵਾਈ ਕੀਤੀ ਹੈ।',
+  },
+  tenGurus: {
+    en: 'The Ten Gurus',
+    pa: 'ਦਸ ਗੁਰੂ ਸਾਹਿਬਾਨ',
+  },
+  readMore: {
+    en: 'Read More',
+    pa: 'ਹੋਰ ਪੜ੍ਹੋ',
+  },
+  filters: {
+    en: 'Filters',
+    pa: 'ਫਿਲਟਰਜ਼',
+  },
+  all: {
+    en: 'All',
+    pa: 'ਸਾਰੇ',
+  },
+  guru: {
+    en: 'Guru',
+    pa: 'ਗੁਰੂ',
+  },
+  battle: {
+    en: 'Battle',
+    pa: 'ਯੁੱਧ',
+  },
+  martyrdom: {
+    en: 'Martyrdom',
+    pa: 'ਸ਼ਹਾਦਤ',
+  },
+  historical: {
+    en: 'Historical',
+    pa: 'ਇਤਿਹਾਸਿਕ',
+  },
+  general: {
+    en: 'General',
+    pa: 'ਸਧਾਰਨ',
+  },
+  timelineEvents: {
+    en: 'Timeline Events',
+    pa: 'ਕਾਲਕ੍ਰਮ ਘਟਨਾਵਾਂ',
+  },
+  timelineDescription: {
+    en: 'Explore key moments that shaped the Sikh faith and community',
+    pa: 'ਉਨ੍ਹਾਂ ਮੁੱਖ ਪਲਾਂ ਦੀ ਪੜਚੋਲ ਕਰੋ ਜਿਨ੍ਹਾਂ ਨੇ ਸਿੱਖ ਧਰਮ ਅਤੇ ਭਾਈਚਾਰੇ ਨੂੰ ਆਕਾਰ ਦਿੱਤਾ',
+  },
+  footerContact: {
+    en: 'Contact Us',
+    pa: 'ਸਾਡੇ ਨਾਲ ਸੰਪਰਕ ਕਰੋ',
+  },
+  footerText: {
+    en: 'Learn more about Sikh history through this interactive timeline. Discover the rich heritage, sacrifices, and triumphs that have shaped the Sikh faith.',
+    pa: 'ਇਸ ਇੰਟਰਐਕਟਿਵ ਟਾਈਮਲਾਈਨ ਰਾਹੀਂ ਸਿੱਖ ਇਤਿਹਾਸ ਬਾਰੇ ਹੋਰ ਜਾਣੋ। ਉਸ ਅਮੀਰ ਵਿਰਾਸਤ, ਕੁਰਬਾਨੀਆਂ ਅਤੇ ਜਿੱਤਾਂ ਦੀ ਖੋਜ ਕਰੋ ਜਿਨ੍ਹਾਂ ਨੇ ਸਿੱਖ ਧਰਮ ਨੂੰ ਆਕਾਰ ਦਿੱਤਾ ਹੈ।',
+  },
+  footerRights: {
+    en: 'All rights reserved',
+    pa: 'ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ',
+  },
+  // Admin interface translations
+  adminLogin: {
+    en: 'Admin Login',
+    pa: 'ਐਡਮਿਨ ਲੌਗਿਨ',
+  },
+  adminPanel: {
+    en: 'Admin Panel',
+    pa: 'ਐਡਮਿਨ ਪੈਨਲ',
+  },
+  adminLoginDescription: {
+    en: 'Enter your credentials to access the admin panel',
+    pa: 'ਐਡਮਿਨ ਪੈਨਲ ਤੱਕ ਪਹੁੰਚ ਕਰਨ ਲਈ ਆਪਣੇ ਲੌਗਿਨ ਵੇਰਵੇ ਦਰਜ ਕਰੋ',
+  },
+  username: {
+    en: 'Username',
+    pa: 'ਯੂਜ਼ਰਨੇਮ',
+  },
+  password: {
+    en: 'Password',
+    pa: 'ਪਾਸਵਰਡ',
+  },
+  login: {
+    en: 'Login',
+    pa: 'ਲੌਗਿਨ',
+  },
+  loggingIn: {
+    en: 'Logging in...',
+    pa: 'ਲੌਗਿਨ ਹੋ ਰਿਹਾ ਹੈ...',
+  },
+  logout: {
+    en: 'Logout',
+    pa: 'ਲੌਗਆਉਟ',
+  },
+  demoCredentials: {
+    en: 'For demo, use username: admin, password: admin',
+    pa: 'ਡੈਮੋ ਲਈ, ਯੂਜ਼ਰਨੇਮ: admin, ਪਾਸਵਰਡ: admin ਵਰਤੋ',
+  },
+  manageSikhHistory: {
+    en: 'Manage Sikh History',
+    pa: 'ਸਿੱਖ ਇਤਿਹਾਸ ਦਾ ਪ੍ਰਬੰਧਨ',
+  },
+  allEvents: {
+    en: 'All Events',
+    pa: 'ਸਾਰੀਆਂ ਘਟਨਾਵਾਂ',
+  },
+  createNewEvent: {
+    en: 'Create New Event',
+    pa: 'ਨਵੀਂ ਘਟਨਾ ਬਣਾਓ',
+  },
+  manageEvents: {
+    en: 'Manage Timeline Events',
+    pa: 'ਕਾਲਕ੍ਰਮ ਘਟਨਾਵਾਂ ਦਾ ਪ੍ਰਬੰਧਨ',
+  },
+  searchEvents: {
+    en: 'Search events by title or year...',
+    pa: 'ਸਿਰਲੇਖ ਜਾਂ ਸਾਲ ਦੁਆਰਾ ਘਟਨਾਵਾਂ ਖੋਜੋ...',
+  },
+  year: {
+    en: 'Year',
+    pa: 'ਸਾਲ',
+  },
+  title: {
+    en: 'Title',
+    pa: 'ਸਿਰਲੇਖ',
+  },
+  category: {
+    en: 'Category',
+    pa: 'ਸ਼੍ਰੇਣੀ',
+  },
+  actions: {
+    en: 'Actions',
+    pa: 'ਕਾਰਵਾਈਆਂ',
+  },
+  noEventsFound: {
+    en: 'No events found',
+    pa: 'ਕੋਈ ਘਟਨਾਵਾਂ ਨਹੀਂ ਮਿਲੀਆਂ',
+  },
+  confirmDelete: {
+    en: 'Are you sure you want to delete this event?',
+    pa: 'ਕੀ ਤੁਸੀਂ ਨਿਸ਼ਚਿਤ ਰੂਪ ਤੋਂ ਇਸ ਘਟਨਾ ਨੂੰ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?',
+  },
+  eventDeleted: {
+    en: 'Event Deleted',
+    pa: 'ਘਟਨਾ ਮਿਟਾਈ ਗਈ',
+  },
+  eventDeletedDescription: {
+    en: 'The event has been deleted successfully',
+    pa: 'ਘਟਨਾ ਨੂੰ ਸਫਲਤਾਪੂਰਵਕ ਮਿਟਾ ਦਿੱਤਾ ਗਿਆ ਹੈ',
+  },
+  editEvent: {
+    en: 'Edit Event',
+    pa: 'ਘਟਨਾ ਸੋਧੋ',
+  },
+  eventEditorDescription: {
+    en: 'Fill in the event details in both English and Punjabi',
+    pa: 'ਅੰਗਰੇਜ਼ੀ ਅਤੇ ਪੰਜਾਬੀ ਦੋਵਾਂ ਵਿੱਚ ਘਟਨਾ ਦੇ ਵੇਰਵੇ ਭਰੋ',
+  },
+  importance: {
+    en: 'Importance',
+    pa: 'ਮਹੱਤਤਾ',
+  },
+  selectCategory: {
+    en: 'Select a category',
+    pa: 'ਸ਼੍ਰੇਣੀ ਚੁਣੋ',
+  },
+  selectImportance: {
+    en: 'Select importance level',
+    pa: 'ਮਹੱਤਤਾ ਪੱਧਰ ਚੁਣੋ',
+  },
+  low: {
+    en: 'Low',
+    pa: 'ਨੀਵਾਂ',
+  },
+  medium: {
+    en: 'Medium',
+    pa: 'ਮੱਧਮ',
+  },
+  high: {
+    en: 'High',
+    pa: 'ਉੱਚ',
+  },
+  titleEnglish: {
+    en: 'Title (English)',
+    pa: 'ਸਿਰਲੇਖ (ਅੰਗਰੇਜ਼ੀ)',
+  },
+  descriptionEnglish: {
+    en: 'Description (English)',
+    pa: 'ਵੇਰਵਾ (ਅੰਗਰੇਜ਼ੀ)',
+  },
+  titlePunjabi: {
+    en: 'Title (Punjabi)',
+    pa: 'ਸਿਰਲੇਖ (ਪੰਜਾਬੀ)',
+  },
+  descriptionPunjabi: {
+    en: 'Description (Punjabi)',
+    pa: 'ਵੇਰਵਾ (ਪੰਜਾਬੀ)',
+  },
+  cancel: {
+    en: 'Cancel',
+    pa: 'ਰੱਦ ਕਰੋ',
+  },
+  saveChanges: {
+    en: 'Save Changes',
+    pa: 'ਤਬਦੀਲੀਆਂ ਸੰਭਾਲੋ',
+  },
+  createEvent: {
+    en: 'Create Event',
+    pa: 'ਘਟਨਾ ਬਣਾਓ',
+  },
+  validationError: {
+    en: 'Validation Error',
+    pa: 'ਪ੍ਰਮਾਣੀਕਰਨ ਤਰੁੱਟੀ',
+  },
+  titleRequired: {
+    en: 'Title is required in both languages',
+    pa: 'ਦੋਵੇਂ ਭਾਸ਼ਾਵਾਂ ਵਿੱਚ ਸਿਰਲੇਖ ਲੋੜੀਂਦਾ ਹੈ',
+  },
+  yearRequired: {
+    en: 'Year is required',
+    pa: 'ਸਾਲ ਲੋੜੀਂਦਾ ਹੈ',
+  },
+  eventCreated: {
+    en: 'Event Created',
+    pa: 'ਘਟਨਾ ਬਣਾਈ ਗਈ',
+  },
+  eventCreatedDescription: {
+    en: 'The new event has been created successfully',
+    pa: 'ਨਵੀਂ ਘਟਨਾ ਸਫਲਤਾਪੂਰਵਕ ਬਣਾਈ ਗਈ ਹੈ',
+  },
+  eventUpdated: {
+    en: 'Event Updated',
+    pa: 'ਘਟਨਾ ਅਪਡੇਟ ਕੀਤੀ ਗਈ',
+  },
+  eventUpdatedDescription: {
+    en: 'The event has been updated successfully',
+    pa: 'ਘਟਨਾ ਨੂੰ ਸਫਲਤਾਪੂਰਵਕ ਅਪਡੇਟ ਕੀਤਾ ਗਿਆ ਹੈ',
+  },
+  back: {
+    en: 'Back',
+    pa: 'ਵਾਪਸ',
+  },
+};
+
 interface LanguageContextType {
-  language: Language;
-  setLanguage: (language: Language) => void;
+  currentLanguage: Language;
+  toggleLanguage: () => void;
   t: (key: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-// Translations object with English and Punjabi translations
-const translations: Record<string, Record<Language, string>> = {
-  // Header
-  "siteTitle": {
-    "en": "Sikh History Timeline",
-    "pa": "ਸਿੱਖ ਇਤਿਹਾਸ ਸਮਾਂ ਰੇਖਾ"
-  },
-  "siteSubtitle": {
-    "en": "1469 - 2010: A Journey Through Time",
-    "pa": "1469 - 2010: ਸਮੇਂ ਦੇ ਸਫ਼ਰ"
-  },
-  "about": {
-    "en": "About",
-    "pa": "ਬਾਰੇ"
-  },
-  "explore": {
-    "en": "Explore",
-    "pa": "ਖੋਜ"
-  },
-  
-  // Hero Section
-  "heroTitle": {
-    "en": "The Journey of Sikhism",
-    "pa": "ਸਿੱਖੀ ਦੀ ਯਾਤਰਾ"
-  },
-  "heroSubtitle": {
-    "en": "Explore the rich history of Sikhism from 1469 to 2010 through this interactive timeline.",
-    "pa": "ਇਸ ਇੰਟਰਐਕਟਿਵ ਸਮਾਂ ਰੇਖਾ ਰਾਹੀਂ 1469 ਤੋਂ 2010 ਤੱਕ ਸਿੱਖੀ ਦੇ ਅਮੀਰ ਇਤਿਹਾਸ ਦੀ ਖੋਜ ਕਰੋ।"
-  },
-  "exploreTimeline": {
-    "en": "Explore Timeline",
-    "pa": "ਸਮਾਂ ਰੇਖਾ ਦੀ ਖੋਜ ਕਰੋ"
-  },
-  
-  // Introduction Section
-  "aboutSikhHistory": {
-    "en": "About Sikh History",
-    "pa": "ਸਿੱਖ ਇਤਿਹਾਸ ਬਾਰੇ"
-  },
-  "sikhismIntro1": {
-    "en": "Sikhism is a monotheistic religion founded in the Punjab region of South Asia by Guru Nanak in the late 15th century. The faith evolved and was shaped by ten successive Sikh Gurus, with the final guru being the sacred text, the Guru Granth Sahib.",
-    "pa": "ਸਿੱਖੀ ਇੱਕ ਏਕੇਸ਼ਵਰਵਾਦੀ ਧਰਮ ਹੈ ਜੋ 15ਵੀਂ ਸਦੀ ਦੇ ਅੰਤ ਵਿੱਚ ਗੁਰੂ ਨਾਨਕ ਦੁਆਰਾ ਦੱਖਣੀ ਏਸ਼ੀਆ ਦੇ ਪੰਜਾਬ ਖੇਤਰ ਵਿੱਚ ਸਥਾਪਿਤ ਕੀਤਾ ਗਿਆ ਸੀ। ਇਹ ਧਰਮ ਵਿਕਸਿਤ ਹੋਇਆ ਅਤੇ ਦਸ ਲਗਾਤਾਰ ਸਿੱਖ ਗੁਰੂਆਂ ਦੁਆਰਾ ਆਕਾਰ ਦਿੱਤਾ ਗਿਆ, ਜਿਨ੍ਹਾਂ ਵਿੱਚ ਅੰਤਿਮ ਗੁਰੂ ਪਵਿੱਤਰ ਗ੍ਰੰਥ, ਗੁਰੂ ਗ੍ਰੰਥ ਸਾਹਿਬ ਹੈ।"
-  },
-  "sikhismIntro2": {
-    "en": "This timeline presents key events from the birth of Guru Nanak Dev Ji in 1469 through the creation of the Khalsa in 1699, the rise and fall of the Sikh Empire, the partition of India, and significant modern events up to 2010.",
-    "pa": "ਇਹ ਸਮਾਂ-ਰੇਖਾ 1469 ਵਿੱਚ ਗੁਰੂ ਨਾਨਕ ਦੇਵ ਜੀ ਦੇ ਜਨਮ ਤੋਂ ਲੈ ਕੇ 1699 ਵਿੱਚ ਖਾਲਸੇ ਦੀ ਸਥਾਪਨਾ, ਸਿੱਖ ਸਾਮਰਾਜ ਦੇ ਉਥਾਨ ਅਤੇ ਪਤਨ, ਭਾਰਤ ਦੀ ਵੰਡ, ਅਤੇ 2010 ਤੱਕ ਦੀਆਂ ਮਹੱਤਵਪੂਰਨ ਆਧੁਨਿਕ ਘਟਨਾਵਾਂ ਦੇ ਮੁੱਖ ਸਮਾਗਮਾਂ ਨੂੰ ਪੇਸ਼ ਕਰਦੀ ਹੈ।"
-  },
-  "sikhismIntro3": {
-    "en": "The history of Sikhism is marked by remarkable spiritual developments, social reforms, political changes, and at times, significant struggles and sacrifices. This timeline aims to provide a comprehensive overview of these historical milestones.",
-    "pa": "ਸਿੱਖੀ ਦਾ ਇਤਿਹਾਸ ਉੱਲੇਖਯੋਗ ਆਤਮਿਕ ਵਿਕਾਸ, ਸਮਾਜਿਕ ਸੁਧਾਰਾਂ, ਰਾਜਨੀਤਿਕ ਤਬਦੀਲੀਆਂ ਅਤੇ ਕਈ ਵਾਰ ਮਹੱਤਵਪੂਰਨ ਸੰਘਰਸ਼ਾਂ ਅਤੇ ਕੁਰਬਾਨੀਆਂ ਨਾਲ ਅੰਕਿਤ ਹੈ। ਇਹ ਸਮਾਂ-ਰੇਖਾ ਇਨ੍ਹਾਂ ਇਤਿਹਾਸਕ ਮੀਲ ਪੱਥਰਾਂ ਦੀ ਵਿਆਪਕ ਝਲਕ ਪ੍ਰਦਾਨ ਕਰਨ ਦਾ ਉਦੇਸ਼ ਰੱਖਦੀ ਹੈ।"
-  },
-  "tenGurus": {
-    "en": "The Ten Gurus",
-    "pa": "ਦਸ ਗੁਰੂ"
-  },
-  
-  // Timeline Section
-  "exploreTheTimeline": {
-    "en": "Explore the Timeline",
-    "pa": "ਸਮਾਂ ਰੇਖਾ ਦੀ ਖੋਜ ਕਰੋ"
-  },
-  "selectTimePeriod": {
-    "en": "Select a Time Period",
-    "pa": "ਇੱਕ ਸਮਾਂ ਮਿਆਦ ਚੁਣੋ"
-  },
-  "filterByCategory": {
-    "en": "Filter by Category",
-    "pa": "ਸ਼੍ਰੇਣੀ ਦੁਆਰਾ ਫਿਲਟਰ ਕਰੋ"
-  },
-  "customYearRange": {
-    "en": "Custom Year Range",
-    "pa": "ਕਸਟਮ ਸਾਲ ਰੇਂਜ"
-  },
-  "eventsShown": {
-    "en": "Events shown",
-    "pa": "ਘਟਨਾਵਾਂ ਦਿਖਾਈਆਂ"
-  },
-  "showImportantEventsOnly": {
-    "en": "Show Important Events Only",
-    "pa": "ਸਿਰਫ ਮਹੱਤਵਪੂਰਨ ਘਟਨਾਵਾਂ ਦਿਖਾਓ"
-  },
-  "noEventsFound": {
-    "en": "No events found for this selection.",
-    "pa": "ਇਸ ਚੋਣ ਲਈ ਕੋਈ ਘਟਨਾਵਾਂ ਨਹੀਂ ਮਿਲੀਆਂ।"
-  },
-  
-  // Categories
-  "allEvents": {
-    "en": "All Events",
-    "pa": "ਸਾਰੀਆਂ ਘਟਨਾਵਾਂ"
-  },
-  "allCategories": {
-    "en": "All Categories",
-    "pa": "ਸਾਰੀਆਂ ਸ਼੍ਰੇਣੀਆਂ"
-  },
-  "gurus": {
-    "en": "Gurus",
-    "pa": "ਗੁਰੂ"
-  },
-  "battles": {
-    "en": "Battles",
-    "pa": "ਯੁੱਧਾਂ"
-  },
-  "temples": {
-    "en": "Temples",
-    "pa": "ਮੰਦਰ"
-  },
-  "scriptures": {
-    "en": "Scriptures",
-    "pa": "ਧਾਰਮਿਕ ਗ੍ਰੰਥ"
-  },
-  "political": {
-    "en": "Political",
-    "pa": "ਰਾਜਨੀਤਿਕ"
-  },
-  "other": {
-    "en": "Other",
-    "pa": "ਹੋਰ"
-  },
-  
-  // Time periods
-  "guruPeriod": {
-    "en": "Guru Period",
-    "pa": "ਗੁਰੂ ਕਾਲ"
-  },
-  "mislPeriod": {
-    "en": "Misl Period",
-    "pa": "ਮਿਸਲ ਕਾਲ"
-  },
-  "sikhEmpire": {
-    "en": "Sikh Empire",
-    "pa": "ਸਿੱਖ ਸਾਮਰਾਜ"
-  },
-  "britishRule": {
-    "en": "British Rule",
-    "pa": "ਅੰਗਰੇਜ਼ੀ ਰਾਜ"
-  },
-  "modernEra": {
-    "en": "Modern Era",
-    "pa": "ਆਧੁਨਿਕ ਕਾਲ"
-  },
-  
-  // Footer
-  "quickLinks": {
-    "en": "Quick Links",
-    "pa": "ਤੇਜ਼ ਲਿੰਕ"
-  },
-  "resources": {
-    "en": "Resources",
-    "pa": "ਸਰੋਤ"
-  },
-  "home": {
-    "en": "Home",
-    "pa": "ਹੋਮ"
-  },
-  "aboutSikhism": {
-    "en": "About Sikhism",
-    "pa": "ਸਿੱਖੀ ਬਾਰੇ"
-  },
-  "tenGurusLink": {
-    "en": "The Ten Gurus",
-    "pa": "ਦਸ ਗੁਰੂ"
-  },
-  "importantEvents": {
-    "en": "Important Events",
-    "pa": "ਮਹੱਤਵਪੂਰਨ ਘਟਨਾਵਾਂ"
-  },
-  "copyright": {
-    "en": "All rights reserved.",
-    "pa": "ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ।"
-  },
-  "createdWith": {
-    "en": "Created with respect for Sikh history and traditions.",
-    "pa": "ਸਿੱਖ ਇਤਿਹਾਸ ਅਤੇ ਪਰੰਪਰਾਵਾਂ ਲਈ ਸਤਿਕਾਰ ਨਾਲ ਬਣਾਇਆ ਗਿਆ।"
-  },
-  
-  // Language toggle
-  "english": {
-    "en": "English",
-    "pa": "ਅੰਗਰੇਜ਼ੀ"
-  },
-  "punjabi": {
-    "en": "ਪੰਜਾਬੀ",
-    "pa": "ਪੰਜਾਬੀ"
+export const useLanguage = (): LanguageContextType => {
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error("useLanguage must be used within a LanguageProvider");
   }
+  return context;
 };
 
-export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useState<Language>('en');
+export const LanguageProvider: React.FC<{children: ReactNode}> = ({ children }) => {
+  const [currentLanguage, setCurrentLanguage] = useState<Language>((localStorage.getItem('language') as Language) || 'en');
 
-  // Translation function
+  const toggleLanguage = () => {
+    const newLanguage = currentLanguage === 'en' ? 'pa' : 'en';
+    setCurrentLanguage(newLanguage);
+    localStorage.setItem('language', newLanguage);
+  };
+
   const t = (key: string): string => {
-    if (translations[key] && translations[key][language]) {
-      return translations[key][language];
+    if (!translations[key]) {
+      console.warn(`Translation key not found: ${key}`);
+      return key;
     }
-    return key;
+    return translations[key][currentLanguage];
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ currentLanguage, toggleLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );
-};
-
-export const useLanguage = (): LanguageContextType => {
-  const context = useContext(LanguageContext);
-  if (context === undefined) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
-  return context;
 };

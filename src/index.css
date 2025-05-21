@@ -71,6 +71,11 @@ body {
   @apply font-body;
 }
 
+/* Language-specific fonts */
+.font-punjabi {
+  font-family: 'Noto Sans Gurmukhi', sans-serif;
+}
+
 /* Timeline line */
 .timeline-container {
   position: relative;
@@ -124,6 +129,19 @@ body {
 
 .animate-pulse {
   animation: pulse 2s infinite;
+}
+
+/* Admin interface styles */
+.admin-nav-item {
+  @apply flex items-center px-4 py-2 text-gray-700 rounded-md hover:bg-sikh-amber/10 hover:text-sikh-amber transition-colors;
+}
+
+.admin-nav-item.active {
+  @apply bg-sikh-amber/20 text-sikh-amber font-medium;
+}
+
+.admin-card {
+  @apply bg-white rounded-lg shadow-md p-4 border border-gray-200 hover:shadow-lg transition-shadow;
 }
 
 /* Custom scrollbar */
