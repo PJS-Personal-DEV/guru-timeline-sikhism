@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 type Language = 'en' | 'pa';
@@ -41,7 +42,7 @@ const translations: Translations = {
   },
   sikhismIntro3: {
     en: 'Sikhism emphasizes the pursuit of justice, equality, and service to humanity, principles that have guided the community through centuries of challenges and achievements.',
-    pa: 'ਸਿੱਖ ਧਰਮ ਨਿਆਂ, ਬਰਾਬਰੀ, ਅਤੇ ਮਨੁੱਖਤਾ ਦੀ ਸੇਵਾ ਦੀ ਪ੍ਰਾਪਤੀ 'ਤੇ ਜ਼ੋਰ ਦਿੰਦਾ ਹੈ, ਅਜਿਹੇ ਸਿਧਾਂਤ ਜਿਨ੍ਹਾਂ ਨੇ ਸਦੀਆਂ ਦੀਆਂ ਚੁਣੌਤੀਆਂ ਅਤੇ ਪ੍ਰਾਪਤੀਆਂ ਦੌਰਾਨ ਭਾਈਚਾਰੇ ਦੀ ਅਗਵਾਈ ਕੀਤੀ ਹੈ।',
+    pa: 'ਸਿੱਖ ਧਰਮ ਨਿਆਂ, ਬਰਾਬਰੀ, ਅਤੇ ਮਨੁੱਖਤਾ ਦੀ ਸੇਵਾ ਦੀ ਪ੍ਰਾਪਤੀ \'ਤੇ ਜ਼ੋਰ ਦਿੰਦਾ ਹੈ, ਅਜਿਹੇ ਸਿਧਾਂਤ ਜਿਨ੍ਹਾਂ ਨੇ ਸਦੀਆਂ ਦੀਆਂ ਚੁਣੌਤੀਆਂ ਅਤੇ ਪ੍ਰਾਪਤੀਆਂ ਦੌਰਾਨ ਭਾਈਚਾਰੇ ਦੀ ਅਗਵਾਈ ਕੀਤੀ ਹੈ।',
   },
   tenGurus: {
     en: 'The Ten Gurus',
