@@ -1,8 +1,16 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { Globe } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Header: React.FC = () => {
+  const { language, setLanguage, t } = useLanguage();
+
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'pa' : 'en');
+  };
+
   return (
     <header className="bg-sikh-blue text-white py-4 shadow-lg">
       <div className="container mx-auto px-4">
@@ -12,13 +20,23 @@ const Header: React.FC = () => {
               <span className="text-sikh-blue text-xl font-bold">ੴ</span>
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold font-header">Sikh History Timeline</h1>
-              <p className="text-sm md:text-base text-sikh-amber">1469 - 2010: A Journey Through Time</p>
+              <h1 className="text-2xl md:text-3xl font-bold font-header">{t("siteTitle")}</h1>
+              <p className="text-sm md:text-base text-sikh-amber">{t("siteSubtitle")}</p>
             </div>
           </div>
-          <div className="flex space-x-4">
-            <Button variant="ghost" className="hover:bg-sikh-amber hover:text-sikh-blue">About</Button>
-            <Button variant="outline" className="border-sikh-amber text-sikh-amber hover:bg-sikh-amber hover:text-sikh-blue">Explore</Button>
+          <div className="flex items-center space-x-4">
+            <Button 
+              variant="outline" 
+              className="border-sikh-amber text-sikh-amber hover:bg-sikh-amber hover:text-sikh-blue flex items-center gap-2"
+              onClick={toggleLanguage}
+            >
+              <Globe className="h-4 w-4" />
+              {language === 'en' ? t("punjabi") : t("english")}
+            </Button>
+            <div className="hidden md:flex space-x-4">
+              <Button variant="ghost" className="hover:bg-sikh-amber hover:text-sikh-blue">{t("about")}</Button>
+              <Button variant="outline" className="border-sikh-amber text-sikh-amber hover:bg-sikh-amber hover:text-sikh-blue">{t("explore")}</Button>
+            </div>
           </div>
         </div>
       </div>

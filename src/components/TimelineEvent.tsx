@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TimelineEvent as TimelineEventType } from '../data/sikhHistory';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface TimelineEventProps {
   event: TimelineEventType;
@@ -10,6 +11,8 @@ interface TimelineEventProps {
 }
 
 const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
+  const { language } = useLanguage();
+  
   // Determine category-based styling
   const getCategoryStyle = () => {
     switch (event.category) {
@@ -29,6 +32,16 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
   };
 
   const isEven = index % 2 === 0;
+  
+  // Use the appropriate language version of the event data
+  const title = language === 'en' ? event.title : (event.titlePa || event.title);
+  const description = language === 'en' ? event.description : (event.descriptionPa || event.description);
+  const category = language === 'en' ? event.category : 
+    (event.category === 'guru' ? 'ਗੁਰੂ' : 
+     event.category === 'battle' ? 'ਯੁੱਧ' : 
+     event.category === 'temple' ? 'ਮੰਦਰ' : 
+     event.category === 'scripture' ? 'ਧਾਰਮਿਕ ਗ੍ਰੰਥ' : 
+     event.category === 'political' ? 'ਰਾਜਨੀਤਿਕ' : 'ਹੋਰ');
 
   return (
     <div 
@@ -45,19 +58,19 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
       )}>
         <CardHeader className="pb-2">
           <div className="flex justify-between items-center">
-            <CardTitle className="text-lg md:text-xl font-bold">{event.title}</CardTitle>
+            <CardTitle className="text-lg md:text-xl font-bold">{title}</CardTitle>
             <span className="text-sm font-semibold bg-sikh-blue text-white px-2 py-1 rounded">{event.year}</span>
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm md:text-base">{event.description}</p>
+          <p className="text-sm md:text-base">{description}</p>
           <div className="mt-2 flex items-center">
             <span className="text-xs uppercase tracking-wide px-2 py-1 bg-gray-100 rounded-full">
-              {event.category}
+              {category}
             </span>
             {event.important && (
               <span className="ml-2 text-xs uppercase tracking-wide px-2 py-1 bg-sikh-amber text-sikh-blue rounded-full">
-                Important
+                {language === 'en' ? 'Important' : 'ਮਹੱਤਵਪੂਰਨ'}
               </span>
             )}
           </div>

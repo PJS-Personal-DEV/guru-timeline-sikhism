@@ -107,7 +107,7 @@ export default {
       },
       fontFamily: {
         'header': ['"Playfair Display"', 'serif'],
-        'body': ['Roboto', 'sans-serif'],
+        'body': ['Roboto', '"Noto Sans Gurmukhi"', 'sans-serif'],
       }
     },
   },

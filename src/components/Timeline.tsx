@@ -5,8 +5,10 @@ import { sikhTimelineEvents, TimelineEvent as TimelineEventType } from '../data/
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Slider } from '@/components/ui/slider';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Timeline: React.FC = () => {
+  const { t } = useLanguage();
   const [startYear, setStartYear] = useState(1469);
   const [endYear, setEndYear] = useState(2010);
   const [filteredEvents, setFilteredEvents] = useState<TimelineEventType[]>(sikhTimelineEvents);
@@ -14,22 +16,22 @@ const Timeline: React.FC = () => {
   
   // Define time periods
   const periods = [
-    { id: 'all', name: 'All Events', startYear: 1469, endYear: 2010 },
-    { id: 'gurus', name: 'Guru Period', startYear: 1469, endYear: 1708 },
-    { id: 'misl', name: 'Misl Period', startYear: 1709, endYear: 1798 },
-    { id: 'empire', name: 'Sikh Empire', startYear: 1799, endYear: 1849 },
-    { id: 'british', name: 'British Rule', startYear: 1849, endYear: 1947 },
-    { id: 'modern', name: 'Modern Era', startYear: 1947, endYear: 2010 }
+    { id: 'all', name: t("allEvents"), startYear: 1469, endYear: 2010 },
+    { id: 'gurus', name: t("guruPeriod"), startYear: 1469, endYear: 1708 },
+    { id: 'misl', name: t("mislPeriod"), startYear: 1709, endYear: 1798 },
+    { id: 'empire', name: t("sikhEmpire"), startYear: 1799, endYear: 1849 },
+    { id: 'british', name: t("britishRule"), startYear: 1849, endYear: 1947 },
+    { id: 'modern', name: t("modernEra"), startYear: 1947, endYear: 2010 }
   ];
   
   const categories = [
-    { id: 'all', name: 'All Categories' },
-    { id: 'guru', name: 'Gurus' },
-    { id: 'battle', name: 'Battles' },
-    { id: 'temple', name: 'Temples' },
-    { id: 'scripture', name: 'Scriptures' },
-    { id: 'political', name: 'Political' },
-    { id: 'other', name: 'Other' }
+    { id: 'all', name: t("allCategories") },
+    { id: 'guru', name: t("gurus") },
+    { id: 'battle', name: t("battles") },
+    { id: 'temple', name: t("temples") },
+    { id: 'scripture', name: t("scriptures") },
+    { id: 'political', name: t("political") },
+    { id: 'other', name: t("other") }
   ];
   
   const handlePeriodChange = (periodId: string) => {
@@ -70,10 +72,10 @@ const Timeline: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8 bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-sikh-blue mb-4">Explore the Timeline</h2>
+        <h2 className="text-2xl font-bold text-sikh-blue mb-4">{t("exploreTheTimeline")}</h2>
         
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">Select a Time Period</h3>
+          <h3 className="text-lg font-semibold mb-2">{t("selectTimePeriod")}</h3>
           <div className="flex flex-wrap gap-2">
             {periods.map((period) => (
               <Button
@@ -89,7 +91,7 @@ const Timeline: React.FC = () => {
         </div>
         
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">Filter by Category</h3>
+          <h3 className="text-lg font-semibold mb-2">{t("filterByCategory")}</h3>
           <Tabs defaultValue="all" value={activeTab} onValueChange={handleCategoryChange} className="w-full">
             <TabsList className="w-full grid grid-cols-3 md:grid-cols-7 gap-1 h-auto">
               {categories.map((category) => (
@@ -102,7 +104,7 @@ const Timeline: React.FC = () => {
         </div>
         
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">Custom Year Range: {startYear} - {endYear}</h3>
+          <h3 className="text-lg font-semibold mb-2">{t("customYearRange")}: {startYear} - {endYear}</h3>
           <Slider
             defaultValue={[startYear, endYear]}
             min={1469}
@@ -119,13 +121,13 @@ const Timeline: React.FC = () => {
         </div>
         
         <div className="text-right">
-          <span className="text-sm text-gray-600 mr-2">Events shown: {filteredEvents.length}</span>
+          <span className="text-sm text-gray-600 mr-2">{t("eventsShown")}: {filteredEvents.length}</span>
           <Button 
             variant="outline" 
             onClick={() => handleCategoryChange('important')}
             className={activeTab === 'important' ? "bg-sikh-amber text-sikh-blue" : ""}
           >
-            Show Important Events Only
+            {t("showImportantEventsOnly")}
           </Button>
         </div>
       </div>
@@ -139,7 +141,7 @@ const Timeline: React.FC = () => {
             ))
           ) : (
             <div className="w-full text-center p-10">
-              <p className="text-lg font-semibold text-gray-500">No events found for this selection.</p>
+              <p className="text-lg font-semibold text-gray-500">{t("noEventsFound")}</p>
             </div>
           )}
         </div>

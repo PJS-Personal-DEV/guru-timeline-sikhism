@@ -1,9 +1,10 @@
-
 export interface TimelineEvent {
   id: number;
   year: number;
   title: string;
+  titlePa?: string; // Punjabi title
   description: string;
+  descriptionPa?: string; // Punjabi description
   category: 'guru' | 'battle' | 'temple' | 'scripture' | 'political' | 'other';
   important?: boolean;
 }
@@ -13,7 +14,9 @@ export const sikhTimelineEvents: TimelineEvent[] = [
     id: 1,
     year: 1469,
     title: "Birth of Guru Nanak Dev Ji",
+    titlePa: "ਗੁਰੂ ਨਾਨਕ ਦੇਵ ਜੀ ਦਾ ਜਨਮ",
     description: "Guru Nanak Dev Ji, the founder of Sikhism, was born in Talwandi, now known as Nankana Sahib, Pakistan.",
+    descriptionPa: "ਸਿੱਖ ਧਰਮ ਦੇ ਸੰਸਥਾਪਕ, ਗੁਰੂ ਨਾਨਕ ਦੇਵ ਜੀ ਦਾ ਜਨਮ ਤਲਵੰਡੀ ਵਿੱਚ ਹੋਇਆ, ਜੋ ਹੁਣ ਪਾਕਿਸਤਾਨ ਵਿੱਚ ਨਨਕਾਣਾ ਸਾਹਿਬ ਦੇ ਨਾਮ ਨਾਲ ਜਾਣਿਆ ਜਾਂਦਾ ਹੈ।",
     category: 'guru',
     important: true
   },
@@ -21,7 +24,9 @@ export const sikhTimelineEvents: TimelineEvent[] = [
     id: 2,
     year: 1499,
     title: "Guru Nanak's Divine Revelation",
+    titlePa: "ਗੁਰੂ ਨਾਨਕ ਦਾ ਦਿਵਯ ਪ੍ਰਕਾਸ਼",
     description: "After disappearing into the river for three days, Guru Nanak emerged with the message 'There is no Hindu, there is no Muslim' and began his missionary work.",
+    descriptionPa: "ਨਦੀ ਵਿੱਚ ਤਿੰਨ ਦਿਨ ਗਾਇਬ ਹੋਣ ਤੋਂ ਬਾਅਦ, ਗੁਰੂ ਨਾਨਕ 'ਨਾ ਕੋ ਹਿੰਦੂ, ਨਾ ਕੋ ਮੁਸਲਮਾਨ' ਦੇ ਸੰਦੇਸ਼ ਨਾਲ ਪ੍ਰਗਟ ਹੋਏ ਅਤੇ ਆਪਣੇ ਧਾਰਮਿਕ ਪ੍ਰਚਾਰ ਦਾ ਕੰਮ ਸ਼ੁਰੂ ਕੀਤਾ।",
     category: 'guru',
     important: true
   },
@@ -126,7 +131,9 @@ export const sikhTimelineEvents: TimelineEvent[] = [
     id: 16,
     year: 1699,
     title: "Creation of the Khalsa",
+    titlePa: "ਖਾਲਸੇ ਦੀ ਸਾਜਨਾ",
     description: "Guru Gobind Singh established the Khalsa order on Vaisakhi, creating a community of initiated Sikhs with distinct identity and discipline.",
+    descriptionPa: "ਗੁਰੂ ਗੋਬਿੰਦ ਸਿੰਘ ਜੀ ਨੇ ਵਿਸਾਖੀ 'ਤੇ ਖਾਲਸਾ ਪੰਥ ਦੀ ਸਥਾਪਨਾ ਕੀਤੀ, ਜਿਸ ਨਾਲ ਵਿਲੱਖਣ ਪਛਾਣ ਅਤੇ ਅਨੁਸ਼ਾਸਨ ਵਾਲੇ ਅੰਮ੍ਰਿਤਧਾਰੀ ਸਿੱਖਾਂ ਦਾ ਸਮੁਦਾਏ ਬਣਿਆ।",
     category: 'guru',
     important: true
   },
@@ -238,7 +245,9 @@ export const sikhTimelineEvents: TimelineEvent[] = [
     id: 31,
     year: 1984,
     title: "Operation Blue Star",
+    titlePa: "ਆਪਰੇਸ਼ਨ ਬਲਿਊ ਸਟਾਰ",
     description: "Indian military operation to remove Sikh militants from the Golden Temple complex in Amritsar, causing damage to sacred buildings and many casualties.",
+    descriptionPa: "ਅੰਮ੍ਰਿਤਸਰ ਵਿੱਚ ਸੁਨਹਿਰੀ ਮੰਦਰ ਕੰਪਲੈਕਸ ਤੋਂ ਸਿੱਖ ਉਗਰਵਾਦੀਆਂ ਨੂੰ ਹਟਾਉਣ ਲਈ ਭਾਰਤੀ ਫੌਜੀ ਕਾਰਵਾਈ, ਜਿਸ ਕਾਰਨ ਪਵਿੱਤਰ ਇਮਾਰਤਾਂ ਨੂੰ ਨੁਕਸਾਨ ਅਤੇ ਕਈ ਲੋਕਾਂ ਦੀ ਮੌਤ ਹੋਈ।",
     category: 'political',
     important: true
   },
@@ -246,7 +255,9 @@ export const sikhTimelineEvents: TimelineEvent[] = [
     id: 32,
     year: 1984,
     title: "Anti-Sikh Riots",
+    titlePa: "ਸਿੱਖ-ਵਿਰੋਧੀ ਦੰਗੇ",
     description: "Following the assassination of Prime Minister Indira Gandhi by her Sikh bodyguards, anti-Sikh riots broke out across India, particularly in Delhi.",
+    descriptionPa: "ਪ੍ਰਧਾਨ ਮੰਤਰੀ ਇੰਦਰਾ ਗਾਂਧੀ ਦੀ ਉਨ੍ਹਾਂ ਦੇ ਸਿੱਖ ਅੰਗਰਖਿਅਕਾਂ ਦੁਆਰਾ ਹੱਤਿਆ ਤੋਂ ਬਾਅਦ, ਸਾਰੇ ਭਾਰਤ ਵਿੱਚ, ਖਾਸ ਕਰਕੇ ਦਿੱਲੀ ਵਿੱਚ ਸਿੱਖ-ਵਿਰੋਧੀ ਦੰਗੇ ਭੜਕ ਉੱਠੇ।",
     category: 'political',
     important: true
   },
