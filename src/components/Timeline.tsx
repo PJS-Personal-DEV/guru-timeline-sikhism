@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Slider } from '@/components/ui/slider';
 import { useLanguage } from '../contexts/LanguageContext';
+import { Calendar, Clock, FileText, Star } from 'lucide-react';
 
 const Timeline: React.FC = () => {
   const { t } = useLanguage();
@@ -16,12 +17,12 @@ const Timeline: React.FC = () => {
   
   // Define time periods
   const periods = [
-    { id: 'all', name: t("allEvents"), startYear: 1469, endYear: 2010 },
-    { id: 'gurus', name: t("guruPeriod"), startYear: 1469, endYear: 1708 },
-    { id: 'misl', name: t("mislPeriod"), startYear: 1709, endYear: 1798 },
-    { id: 'empire', name: t("sikhEmpire"), startYear: 1799, endYear: 1849 },
-    { id: 'british', name: t("britishRule"), startYear: 1849, endYear: 1947 },
-    { id: 'modern', name: t("modernEra"), startYear: 1947, endYear: 2010 }
+    { id: 'all', name: t("allEvents"), startYear: 1469, endYear: 2010, icon: <FileText className="w-4 h-4 mr-1" /> },
+    { id: 'gurus', name: t("guruPeriod"), startYear: 1469, endYear: 1708, icon: <Star className="w-4 h-4 mr-1" /> },
+    { id: 'misl', name: t("mislPeriod"), startYear: 1709, endYear: 1798, icon: <Clock className="w-4 h-4 mr-1" /> },
+    { id: 'empire', name: t("sikhEmpire"), startYear: 1799, endYear: 1849, icon: <Star className="w-4 h-4 mr-1" /> },
+    { id: 'british', name: t("britishRule"), startYear: 1849, endYear: 1947, icon: <Clock className="w-4 h-4 mr-1" /> },
+    { id: 'modern', name: t("modernEra"), startYear: 1947, endYear: 2010, icon: <Calendar className="w-4 h-4 mr-1" /> }
   ];
   
   const categories = [
@@ -71,19 +72,30 @@ const Timeline: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8 bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-sikh-blue mb-4">{t("exploreTheTimeline")}</h2>
+      <div className="mb-8 bg-white p-6 rounded-xl shadow-lg border border-sikh-amber/20 bg-gradient-to-br from-white to-sikh-light">
+        <h2 className="text-2xl font-bold text-sikh-blue mb-4 flex items-center">
+          <Calendar className="w-5 h-5 mr-2 text-sikh-amber" />
+          {t("exploreTheTimeline")}
+        </h2>
         
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">{t("selectTimePeriod")}</h3>
+          <h3 className="text-lg font-semibold mb-3 text-sikh-navy flex items-center">
+            <Clock className="w-4 h-4 mr-2 text-sikh-amber" />
+            {t("selectTimePeriod")}
+          </h3>
           <div className="flex flex-wrap gap-2">
             {periods.map((period) => (
               <Button
                 key={period.id}
                 variant={period.startYear === startYear && period.endYear === endYear ? "default" : "outline"}
                 onClick={() => handlePeriodChange(period.id)}
-                className="bg-sikh-blue text-white hover:bg-sikh-navy"
+                className={`transition-all duration-300 ${
+                  period.startYear === startYear && period.endYear === endYear 
+                    ? "bg-sikh-amber text-sikh-navy shadow-md" 
+                    : "border-sikh-blue/50 hover:border-sikh-amber hover:text-sikh-navy"
+                }`}
               >
+                {period.icon}
                 {period.name}
               </Button>
             ))}
@@ -91,11 +103,18 @@ const Timeline: React.FC = () => {
         </div>
         
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">{t("filterByCategory")}</h3>
+          <h3 className="text-lg font-semibold mb-3 text-sikh-navy flex items-center">
+            <FileText className="w-4 h-4 mr-2 text-sikh-amber" />
+            {t("filterByCategory")}
+          </h3>
           <Tabs defaultValue="all" value={activeTab} onValueChange={handleCategoryChange} className="w-full">
-            <TabsList className="w-full grid grid-cols-3 md:grid-cols-7 gap-1 h-auto">
+            <TabsList className="w-full grid grid-cols-3 md:grid-cols-7 gap-1 h-auto bg-sikh-blue/5 p-1 rounded-lg">
               {categories.map((category) => (
-                <TabsTrigger key={category.id} value={category.id} className="py-2 px-3">
+                <TabsTrigger 
+                  key={category.id} 
+                  value={category.id} 
+                  className="py-2 px-3 data-[state=active]:bg-sikh-amber data-[state=active]:text-sikh-navy data-[state=active]:shadow-md transition-all"
+                >
                   {category.name}
                 </TabsTrigger>
               ))}
@@ -104,35 +123,47 @@ const Timeline: React.FC = () => {
         </div>
         
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">{t("customYearRange")}: {startYear} - {endYear}</h3>
-          <Slider
-            defaultValue={[startYear, endYear]}
-            min={1469}
-            max={2010}
-            step={1}
-            value={[startYear, endYear]}
-            onValueChange={handleYearSliderChange}
-            className="mt-6"
-          />
-          <div className="flex justify-between mt-2 text-sm text-gray-600">
-            <span>1469</span>
-            <span>2010</span>
+          <h3 className="text-lg font-semibold mb-3 text-sikh-navy flex items-center">
+            <Calendar className="w-4 h-4 mr-2 text-sikh-amber" />
+            {t("customYearRange")}: <span className="text-sikh-amber ml-2">{startYear} - {endYear}</span>
+          </h3>
+          <div className="px-3 py-6">
+            <Slider
+              defaultValue={[startYear, endYear]}
+              min={1469}
+              max={2010}
+              step={1}
+              value={[startYear, endYear]}
+              onValueChange={handleYearSliderChange}
+              className="mt-6"
+            />
+            <div className="flex justify-between mt-2 text-sm text-gray-600">
+              <span>1469</span>
+              <span>2010</span>
+            </div>
           </div>
         </div>
         
-        <div className="text-right">
-          <span className="text-sm text-gray-600 mr-2">{t("eventsShown")}: {filteredEvents.length}</span>
+        <div className="flex justify-between items-center">
+          <span className="text-sm bg-sikh-blue text-white px-3 py-1 rounded-full shadow-sm">
+            {t("eventsShown")}: {filteredEvents.length}
+          </span>
           <Button 
             variant="outline" 
             onClick={() => handleCategoryChange('important')}
-            className={activeTab === 'important' ? "bg-sikh-amber text-sikh-blue" : ""}
+            className={`transition-all duration-300 ${
+              activeTab === 'important' 
+                ? "bg-sikh-amber text-sikh-blue border-sikh-amber shadow-md" 
+                : "border-sikh-amber text-sikh-blue hover:bg-sikh-amber/20"
+            }`}
           >
+            <Star className="w-4 h-4 mr-2" />
             {t("showImportantEventsOnly")}
           </Button>
         </div>
       </div>
       
-      <div className="timeline-container">
+      <div className="timeline-container relative">
         <div className="timeline-line"></div>
         <div className="flex flex-col md:flex-row md:flex-wrap">
           {filteredEvents.length > 0 ? (
@@ -140,7 +171,7 @@ const Timeline: React.FC = () => {
               <TimelineEvent key={event.id} event={event} index={index} />
             ))
           ) : (
-            <div className="w-full text-center p-10">
+            <div className="w-full text-center p-10 bg-white/80 rounded-xl shadow-md border border-sikh-amber/20">
               <p className="text-lg font-semibold text-gray-500">{t("noEventsFound")}</p>
             </div>
           )}
