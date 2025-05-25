@@ -21,13 +21,6 @@ const Header = () => {
             >
               {currentLanguage === 'en' ? 'ਪੰਜਾਬੀ' : 'English'}
             </button>
-            
-            <Link
-              to="/admin"
-              className="px-3 py-1.5 rounded-md bg-sikh-amber text-sikh-blue hover:bg-sikh-gold transition-colors"
-            >
-              {t('adminLogin')}
-            </Link>
           </div>
         </div>
       </div>

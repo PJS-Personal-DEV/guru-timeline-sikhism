@@ -12,7 +12,7 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
-import { Edit, Plus, Search, Trash2 } from 'lucide-react';
+import { Edit, Plus, Search, Trash2, Tag } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 
 interface EventsListProps {
@@ -40,10 +40,12 @@ const EventsList: React.FC<EventsListProps> = ({ onSelectEvent, onCreateNew }) =
   const filteredEvents = events.filter(event => {
     const title = currentLanguage === 'en' ? event.title_en : event.title_pa;
     const year = event.year.toString();
+    const tags = event.tags?.join(' ') || '';
     
     return (
       title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      year.includes(searchTerm)
+      year.includes(searchTerm) ||
+      tags.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
   
@@ -79,6 +81,7 @@ const EventsList: React.FC<EventsListProps> = ({ onSelectEvent, onCreateNew }) =
               <TableHead className="w-24">{t('year')}</TableHead>
               <TableHead>{t('title')}</TableHead>
               <TableHead className="w-28">{t('category')}</TableHead>
+              <TableHead className="w-32">Tags</TableHead>
               <TableHead className="w-28 text-right">{t('actions')}</TableHead>
             </TableRow>
           </TableHeader>
@@ -88,12 +91,32 @@ const EventsList: React.FC<EventsListProps> = ({ onSelectEvent, onCreateNew }) =
                 <TableRow key={event.id}>
                   <TableCell className="font-medium">{event.year}</TableCell>
                   <TableCell>
-                    {currentLanguage === 'en' ? event.title_en : event.title_pa}
+                    <div className="flex items-center gap-2">
+                      {currentLanguage === 'en' ? event.title_en : event.title_pa}
+                      {event.important && (
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-sikh-amber/20 text-sikh-blue">
+                          Important
+                        </span>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell>
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-sikh-amber/20 text-sikh-blue">
                       {event.category}
                     </span>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-wrap gap-1">
+                      {event.tags?.slice(0, 2).map((tag, index) => (
+                        <span key={index} className="inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-gray-100 text-gray-600">
+                          <Tag className="w-2 h-2 mr-1" />
+                          {tag}
+                        </span>
+                      ))}
+                      {event.tags && event.tags.length > 2 && (
+                        <span className="text-xs text-gray-500">+{event.tags.length - 2}</span>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell className="text-right">
                     <Button
@@ -117,7 +140,7 @@ const EventsList: React.FC<EventsListProps> = ({ onSelectEvent, onCreateNew }) =
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-8 text-gray-500">
+                <TableCell colSpan={5} className="text-center py-8 text-gray-500">
                   {t('noEventsFound')}
                 </TableCell>
               </TableRow>

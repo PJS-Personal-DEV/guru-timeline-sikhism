@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TimelineEvent as TimelineEventType } from '../data/sikhHistory';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Calendar, FileText, Map, Star } from 'lucide-react';
+import { Calendar, FileText, Map, Star, Tag } from 'lucide-react';
 
 interface TimelineEventProps {
   event: TimelineEventType;
@@ -27,6 +27,12 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
         return 'border-l-4 border-blue-500 bg-gradient-to-br from-white to-blue-50';
       case 'political':
         return 'border-l-4 border-green-600 bg-gradient-to-br from-white to-green-50';
+      case 'martyrdom':
+        return 'border-l-4 border-purple-600 bg-gradient-to-br from-white to-purple-50';
+      case 'historical':
+        return 'border-l-4 border-orange-600 bg-gradient-to-br from-white to-orange-50';
+      case 'establishment':
+        return 'border-l-4 border-teal-600 bg-gradient-to-br from-white to-teal-50';
       default:
         return 'border-l-4 border-gray-400 bg-gradient-to-br from-white to-gray-50';
     }
@@ -44,6 +50,12 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
         return <FileText className="w-4 h-4 text-blue-500" />;
       case 'political':
         return <Map className="w-4 h-4 text-green-600" />;
+      case 'martyrdom':
+        return <Star className="w-4 h-4 text-purple-600" />;
+      case 'historical':
+        return <Calendar className="w-4 h-4 text-orange-600" />;
+      case 'establishment':
+        return <Map className="w-4 h-4 text-teal-600" />;
       default:
         return <FileText className="w-4 h-4 text-gray-400" />;
     }
@@ -52,14 +64,17 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
   const isEven = index % 2 === 0;
   
   // Use the appropriate language version of the event data
-  const title = currentLanguage === 'en' ? event.title : (event.titlePa || event.title);
-  const description = currentLanguage === 'en' ? event.description : (event.descriptionPa || event.description);
+  const title = currentLanguage === 'en' ? event.title_en : event.title_pa;
+  const description = currentLanguage === 'en' ? event.description_en : event.description_pa;
   const category = currentLanguage === 'en' ? event.category : 
     (event.category === 'guru' ? 'ਗੁਰੂ' : 
      event.category === 'battle' ? 'ਯੁੱਧ' : 
      event.category === 'temple' ? 'ਮੰਦਰ' : 
      event.category === 'scripture' ? 'ਧਾਰਮਿਕ ਗ੍ਰੰਥ' : 
-     event.category === 'political' ? 'ਰਾਜਨੀਤਿਕ' : 'ਹੋਰ');
+     event.category === 'political' ? 'ਰਾਜਨੀਤਿਕ' : 
+     event.category === 'martyrdom' ? 'ਸ਼ਹੀਦੀ' :
+     event.category === 'historical' ? 'ਇਤਿਹਾਸਿਕ' :
+     event.category === 'establishment' ? 'ਸਥਾਪਨਾ' : 'ਹੋਰ');
 
   return (
     <div 
@@ -94,8 +109,9 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm md:text-base">{description}</p>
-          <div className="mt-3 flex items-center gap-2">
+          <p className="text-sm md:text-base mb-3">{description}</p>
+          
+          <div className="flex flex-wrap gap-2 mb-3">
             <span className="text-xs uppercase tracking-wide px-2 py-1 bg-gray-100 rounded-full shadow-sm flex items-center gap-1">
               {getCategoryIcon()}
               {category}
@@ -107,6 +123,20 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
               </span>
             )}
           </div>
+          
+          {event.tags && event.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {event.tags.map((tag, tagIndex) => (
+                <span
+                  key={tagIndex}
+                  className="text-xs px-2 py-1 bg-gray-50 text-gray-600 rounded-full border border-gray-200 flex items-center gap-1"
+                >
+                  <Tag className="w-2 h-2" />
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

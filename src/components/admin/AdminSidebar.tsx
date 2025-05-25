@@ -2,17 +2,19 @@
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { Calendar, Plus, FileText } from 'lucide-react';
+import { Calendar, Plus, FileText, Lock } from 'lucide-react';
 
 interface AdminSidebarProps {
   onCreateNew: () => void;
   onViewList: () => void;
-  activeView: 'list' | 'editor' | 'create';
+  onPasswordChange: () => void;
+  activeView: 'list' | 'editor' | 'create' | 'password';
 }
 
 const AdminSidebar: React.FC<AdminSidebarProps> = ({ 
   onCreateNew, 
   onViewList,
+  onPasswordChange,
   activeView
 }) => {
   const { t } = useLanguage();
@@ -43,6 +45,15 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
         >
           <Plus className="h-4 w-4 mr-2" />
           {t('createNewEvent')}
+        </Button>
+
+        <Button
+          variant={activeView === 'password' ? "default" : "ghost"}
+          className={`w-full justify-start ${activeView === 'password' ? "bg-sikh-amber text-white hover:bg-sikh-gold" : ""}`}
+          onClick={onPasswordChange}
+        >
+          <Lock className="h-4 w-4 mr-2" />
+          Change Password
         </Button>
       </div>
     </div>

@@ -7,12 +7,13 @@ import AdminSidebar from '@/components/admin/AdminSidebar';
 import EventsList from '@/components/admin/EventsList';
 import EventEditor from '@/components/admin/EventEditor';
 import AdminLogin from '@/components/admin/AdminLogin';
+import PasswordChange from '@/components/admin/PasswordChange';
 
 const Admin = () => {
   const { t } = useLanguage();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
-  const [activeView, setActiveView] = useState<'list' | 'editor' | 'create'>('list');
+  const [activeView, setActiveView] = useState<'list' | 'editor' | 'create' | 'password'>('list');
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -46,6 +47,10 @@ const Admin = () => {
     setActiveView('create');
   };
 
+  const handlePasswordChange = () => {
+    setActiveView('password');
+  };
+
   const handleBackToList = () => {
     setActiveView('list');
     setSelectedEventId(null);
@@ -62,6 +67,7 @@ const Admin = () => {
         <AdminSidebar 
           onCreateNew={handleCreateNew}
           onViewList={() => setActiveView('list')}
+          onPasswordChange={handlePasswordChange}
           activeView={activeView}
         />
         <div className="flex-1 p-6">
@@ -74,6 +80,9 @@ const Admin = () => {
               isNew={activeView === 'create'}
               onBack={handleBackToList} 
             />
+          )}
+          {activeView === 'password' && (
+            <PasswordChange />
           )}
         </div>
       </div>
