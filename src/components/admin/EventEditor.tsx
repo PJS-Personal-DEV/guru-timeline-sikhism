@@ -49,7 +49,7 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack }) => 
     description_en: existingEvent?.description_en || '',
     description_pa: existingEvent?.description_pa || '',
     category: existingEvent?.category || 'general',
-    importance: existingEvent?.importance || 'medium',
+    important: existingEvent?.important || false,
   });
   
   useEffect(() => {
@@ -65,7 +65,11 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack }) => 
   };
   
   const handleSelectChange = (name: string, value: string) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
+    if (name === 'important') {
+      setFormData(prev => ({ ...prev, [name]: value === 'true' }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
   
   const handleSubmit = (e: React.FormEvent) => {
@@ -164,18 +168,17 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack }) => 
               </div>
               
               <div>
-                <Label htmlFor="importance">{t('importance')}</Label>
+                <Label htmlFor="important">{t('importance')}</Label>
                 <Select
-                  value={formData.importance}
-                  onValueChange={(value) => handleSelectChange('importance', value)}
+                  value={String(formData.important)}
+                  onValueChange={(value) => handleSelectChange('important', value)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder={t('selectImportance')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="low">{t('low')}</SelectItem>
-                    <SelectItem value="medium">{t('medium')}</SelectItem>
-                    <SelectItem value="high">{t('high')}</SelectItem>
+                    <SelectItem value="false">{t('low')}</SelectItem>
+                    <SelectItem value="true">{t('high')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

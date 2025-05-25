@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import TimelineEvent from './TimelineEvent';
-import { sikhTimelineEvents, TimelineEvent as TimelineEventType } from '../data/sikhHistory';
+import { sikhHistory, TimelineEvent as TimelineEventType } from '../data/sikhHistory';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Slider } from '@/components/ui/slider';
@@ -12,7 +11,7 @@ const Timeline: React.FC = () => {
   const { t } = useLanguage();
   const [startYear, setStartYear] = useState(1469);
   const [endYear, setEndYear] = useState(2010);
-  const [filteredEvents, setFilteredEvents] = useState<TimelineEventType[]>(sikhTimelineEvents);
+  const [filteredEvents, setFilteredEvents] = useState<TimelineEventType[]>(sikhHistory);
   const [activeTab, setActiveTab] = useState('all');
   
   // Define time periods
@@ -50,7 +49,7 @@ const Timeline: React.FC = () => {
   };
   
   const filterEvents = (start: number, end: number, category: string) => {
-    let filtered = sikhTimelineEvents.filter(event => event.year >= start && event.year <= end);
+    let filtered = sikhHistory.filter(event => event.year >= start && event.year <= end);
     
     if (category !== 'all') {
       if (category === 'important') {

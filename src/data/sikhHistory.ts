@@ -1,4 +1,3 @@
-
 export interface TimelineEvent {
   id: string;
   year: number;
@@ -367,14 +366,14 @@ export const sikhHistory: TimelineEvent[] = [
     title: "Guru Granth Sahib declared Eternal Guru",
     titlePa: "ਗੁਰੂ ਗ੍ਰੰਥ ਸਾਹਿਬ ਸਦੀਵੀ ਗੁਰੂ ਘੋਸ਼ਿਤ",
     description: "Before his death, Guru Gobind Singh Ji declared the Guru Granth Sahib as the eternal Guru of the Sikhs, ending the line of human Gurus.",
-    descriptionPa: "ਆਪਣੀ ਮੌਤ ਤੋਂ ਪਹਿਲਾਂ, ਗੁਰੂ ਗੋਬਿੰਦ ਸਿੰਘ ਜੀ ਨੇ ਗੁਰੂ ਗ੍ਰੰਥ ਸਾਹਿਬ ਨੂੰ ਸਿੱਖਾਂ ਦਾ ਸਦੀਵੀ ਗੁਰੂ ਘੋਸ਼ਿਤ ਕੀਤਾ।",
+    descriptionPa: "ਆਪਣੀ ਮੌਤ ਤੋਂ ਪਹਿਲਾਂ, ਗੁਰੂ ਗੋਬਿੰਦ ਸਿੰਘ ਜੀ ਨੇ ਗੁਰੂ ਗ੍ਰੰਥ ਸਾਹਿਬ ਨੂੰ ਸਦੀਵੀ ਗੁਰੂ ਘੋਸ਼ਿਤ ਕੀਤਾ।",
     category: "scripture",
     important: true,
     tags: ["eternal guru", "guru granth sahib", "final decision", "spiritual authority"],
     title_en: "Guru Granth Sahib declared Eternal Guru",
     title_pa: "ਗੁਰੂ ਗ੍ਰੰਥ ਸਾਹਿਬ ਸਦੀਵੀ ਗੁਰੂ ਘੋਸ਼ਿਤ",
     description_en: "Before his death, Guru Gobind Singh Ji declared the Guru Granth Sahib as the eternal Guru of the Sikhs, ending the line of human Gurus.",
-    description_pa: "ਆਪਣੀ ਮੌਤ ਤੋਂ ਪਹਿਲਾਂ, ਗੁਰੂ ਗੋਬਿੰਦ ਸਿੰਘ ਜੀ ਨੇ ਗੁਰੂ ਗ੍ਰੰਥ ਸਾਹਿਬ ਨੂੰ ਸਿੱਖਾਂ ਦਾ ਸਦੀਵੀ ਗੁਰੂ ਘੋਸ਼ਿਤ ਕੀਤਾ।"
+    description_pa: "ਆਪਣੀ ਮੌਤ ਤੋਂ ਪਹਿਲਾਂ, ਗੁਰੂ ਗੋਬਿੰਦ ਸਿੰਘ ਜੀ ਨੇ ਗੁਰੂ ਗ੍ਰੰਥ ਸਾਹਿਬ ਨੂੰ ਸਦੀਵੀ ਗੁਰੂ ਘੋਸ਼ਿਤ ਕੀਤਾ।"
   },
   {
     id: "event_1710",
@@ -647,3 +646,6 @@ export const sikhHistory: TimelineEvent[] = [
     description_pa: "ਡਾ. ਮਨਮੋਹਨ ਸਿੰਘ ਭਾਰਤ ਦੇ ਪਹਿਲੇ ਸਿੱਖ ਪ੍ਰਧਾਨ ਮੰਤਰੀ ਬਣੇ, ਜੋ ਸਿੱਖ ਰਾਜਨੀਤਿਕ ਨੁਮਾਇੰਦਗੀ ਵਿੱਚ ਇੱਕ ਮਹੱਤਵਪੂਰਨ ਮੀਲ ਪੱਥਰ ਸੀ।"
   }
 ];
+
+// Export with both names for compatibility
+export const sikhTimelineEvents = sikhHistory;
