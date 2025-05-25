@@ -1,4 +1,89 @@
-// Update the export to make sikhHistory available to other files
+// Define the TimelineEvent interface
+export interface TimelineEvent {
+  id: string;
+  year: number;
+  title: string;
+  titlePa?: string;
+  description: string;
+  descriptionPa?: string;
+  category: 'guru' | 'battle' | 'temple' | 'scripture' | 'political' | 'martyrdom' | 'historical' | 'general';
+  important?: boolean;
+}
+
+// Updated timeline events data with proper interface
+export const sikhTimelineEvents: TimelineEvent[] = [
+  {
+    id: 'event_1',
+    year: 1469,
+    title: 'Birth of Guru Nanak Dev Ji',
+    titlePa: 'ਗੁਰੂ ਨਾਨਕ ਦੇਵ ਜੀ ਦਾ ਜਨਮ',
+    description: 'Guru Nanak Dev Ji, the founder of Sikhism, was born in Talwandi (now Nankana Sahib, Pakistan).',
+    descriptionPa: 'ਸਿੱਖ ਧਰਮ ਦੇ ਬਾਨੀ ਗੁਰੂ ਨਾਨਕ ਦੇਵ ਜੀ ਦਾ ਜਨਮ ਤਲਵੰਡੀ (ਹੁਣ ਨਨਕਾਣਾ ਸਾਹਿਬ, ਪਾਕਿਸਤਾਨ) ਵਿਖੇ ਹੋਇਆ ਸੀ।',
+    category: 'guru',
+    important: true,
+  },
+  {
+    id: 'event_2',
+    year: 1606,
+    title: 'Martyrdom of Guru Arjan Dev Ji',
+    titlePa: 'ਗੁਰੂ ਅਰਜਨ ਦੇਵ ਜੀ ਦੀ ਸ਼ਹਾਦਤ',
+    description: 'Guru Arjan Dev Ji, the fifth Guru, was martyred in Lahore for refusing to alter the Guru Granth Sahib.',
+    descriptionPa: 'ਗੁਰੂ ਅਰਜਨ ਦੇਵ ਜੀ, ਪੰਜਵੇਂ ਗੁਰੂ, ਨੇ ਗੁਰੂ ਗ੍ਰੰਥ ਸਾਹਿਬ ਨੂੰ ਬਦਲਣ ਤੋਂ ਇਨਕਾਰ ਕਰਨ ਤੇ ਲਾਹੌਰ ਵਿੱਚ ਸ਼ਹੀਦ ਹੋ ਗਏ ਸਨ।',
+    category: 'martyrdom',
+    important: true,
+  },
+  {
+    id: 'event_3',
+    year: 1675,
+    title: 'Martyrdom of Guru Tegh Bahadur Ji',
+    titlePa: 'ਗੁਰੂ ਤੇਗ ਬਹਾਦਰ ਜੀ ਦੀ ਸ਼ਹਾਦਤ',
+    description: 'Guru Tegh Bahadur Ji, the ninth Guru, was executed in Delhi for defending the religious freedom of Hindus.',
+    descriptionPa: 'ਗੁਰੂ ਤੇਗ ਬਹਾਦਰ ਜੀ, ਨੌਵੇਂ ਗੁਰੂ, ਨੇ ਹਿੰਦੂਆਂ ਦੀ ਧਾਰਮਿਕ ਆਜ਼ਾਦੀ ਦੀ ਰਾਖੀ ਲਈ ਦਿੱਲੀ ਵਿੱਚ ਸ਼ਹੀਦ ਹੋ ਗਏ ਸਨ।',
+    category: 'martyrdom',
+    important: true,
+  },
+  {
+    id: 'event_4',
+    year: 1699,
+    title: 'Formation of the Khalsa',
+    titlePa: 'ਖਾਲਸਾ ਦੀ ਸਾਜਨਾ',
+    description: 'Guru Gobind Singh Ji, the tenth Guru, created the Khalsa, a community of initiated Sikhs, at Anandpur Sahib.',
+    descriptionPa: 'ਗੁਰੂ ਗੋਬਿੰਦ ਸਿੰਘ ਜੀ, ਦਸਵੇਂ ਗੁਰੂ, ਨੇ ਅਨੰਦਪੁਰ ਸਾਹਿਬ ਵਿਖੇ ਖਾਲਸਾ ਦੀ ਸਾਜਨਾ ਕੀਤੀ, ਜੋ ਕਿ ਅੰਮ੍ਰਿਤਧਾਰੀ ਸਿੱਖਾਂ ਦਾ ਭਾਈਚਾਰਾ ਹੈ।',
+    category: 'historical',
+    important: true,
+  },
+  {
+    id: 'event_5',
+    year: 1704,
+    title: 'Battle of Chamkaur',
+    titlePa: 'ਚਮਕੌਰ ਦੀ ਜੰਗ',
+    description: 'The Battle of Chamkaur was fought between the Khalsa and the Mughal army, where Guru Gobind Singh Ji lost his two elder sons.',
+    descriptionPa: 'ਚਮਕੌਰ ਦੀ ਜੰਗ ਖਾਲਸਾ ਅਤੇ ਮੁਗਲ ਫੌਜ ਵਿਚਕਾਰ ਹੋਈ ਸੀ, ਜਿੱਥੇ ਗੁਰੂ ਗੋਬਿੰਦ ਸਿੰਘ ਜੀ ਨੇ ਆਪਣੇ ਦੋ ਵੱਡੇ ਪੁੱਤਰਾਂ ਨੂੰ ਗੁਆ ਦਿੱਤਾ ਸੀ।',
+    category: 'battle',
+  },
+  {
+    id: 'event_6',
+    year: 1799,
+    title: 'Maharaja Ranjit Singh captures Lahore',
+    titlePa: 'ਮਹਾਰਾਜਾ ਰਣਜੀਤ ਸਿੰਘ ਨੇ ਲਾਹੌਰ ਤੇ ਕਬਜ਼ਾ ਕੀਤਾ',
+    description: 'Maharaja Ranjit Singh captured Lahore, establishing the Sikh Empire.',
+    descriptionPa: 'ਮਹਾਰਾਜਾ ਰਣਜੀਤ ਸਿੰਘ ਨੇ ਲਾਹੌਰ ਤੇ ਕਬਜ਼ਾ ਕਰਕੇ ਸਿੱਖ ਸਾਮਰਾਜ ਦੀ ਸਥਾਪਨਾ ਕੀਤੀ।',
+    category: 'historical',
+    important: true,
+  },
+  {
+    id: 'event_7',
+    year: 1849,
+    title: 'Annexation of Punjab',
+    titlePa: 'ਪੰਜਾਬ ਦਾ ਸ਼ਾਮਿਲ ਹੋਣਾ',
+    description: 'The British East India Company annexed Punjab, ending the Sikh Empire.',
+    descriptionPa: 'ਬ੍ਰਿਟਿਸ਼ ਈਸਟ ਇੰਡੀਆ ਕੰਪਨੀ ਨੇ ਪੰਜਾਬ ਨੂੰ ਆਪਣੇ ਨਾਲ ਮਿਲਾ ਲਿਆ, ਜਿਸ ਨਾਲ ਸਿੱਖ ਸਾਮਰਾਜ ਦਾ ਅੰਤ ਹੋ ਗਿਆ।',
+    category: 'historical',
+    important: true,
+  },
+];
+
+// Keep the original export for backward compatibility with the admin interface
 export const sikhHistory = [
   {
     id: 'event_1',

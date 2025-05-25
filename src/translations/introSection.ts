@@ -12,7 +12,7 @@ export const introSectionTranslations: Record<string, TranslationItem> = {
   },
   sikhismIntro3: {
     en: 'Sikhism emphasizes the pursuit of justice, equality, and service to humanity, principles that have guided the community through centuries of challenges and achievements.',
-    pa: 'ਸਿੱਖ ਧਰਮ ਨਿਆਂ, ਬਰਾਬਰੀ, ਅਤੇ ਮਨੁੱਖਤਾ ਦੀ ਸੇਵਾ ਦੀ ਪ੍ਰਾਪਤੀ \'ਤੇ ਜ਼ੋਰ ਦਿੰਦਾ ਹੈ, ਅਜਿਹੇ ਸਿਧਾਂਤ ਜਿਨ੍ਹਾਂ ਨੇ ਸਦੀਆਂ ਦੀਆਂ ਚੁਣੌਤੀਆਂ ਅਤੇ ਪ੍ਰਾਪਤੀਆਂ ਦੌਰਾਨ ਭਾਈਚਾਰੇ ਦੀ ਅਗਵਾਈ ਕੀਤੀ ਹੈ।',
+    pa: 'ਸਿੱਖ ਧਰਮ ਨਿਆਂ, ਬਰਾਬਰੀ, ਅਤੇ ਮਨੁੱਖਤਾ ਦੀ ਸੇਵਾ ਦੀ ਪ੍ਰਾਪਤੀ ਤੇ ਜ਼ੋਰ ਦਿੰਦਾ ਹੈ, ਅਜਿਹੇ ਸਿਧਾਂਤ ਜਿਨ੍ਹਾਂ ਨੇ ਸਦੀਆਂ ਦੀਆਂ ਚੁਣੌਤੀਆਂ ਅਤੇ ਪ੍ਰਾਪਤੀਆਂ ਦੌਰਾਨ ਭਾਈਚਾਰੇ ਦੀ ਅਗਵਾਈ ਕੀਤੀ ਹੈ।',
   },
   tenGurus: {
     en: 'The Ten Gurus',
@@ -21,5 +21,81 @@ export const introSectionTranslations: Record<string, TranslationItem> = {
   readMore: {
     en: 'Read More',
     pa: 'ਹੋਰ ਪੜ੍ਹੋ',
+  },
+  exploreTheTimeline: {
+    en: 'Explore the Timeline',
+    pa: 'ਕਾਲਕ੍ਰਮ ਦੀ ਪੜਚੋਲ ਕਰੋ',
+  },
+  selectTimePeriod: {
+    en: 'Select Time Period',
+    pa: 'ਸਮਾਂ ਚੁਣੋ',
+  },
+  filterByCategory: {
+    en: 'Filter by Category',
+    pa: 'ਸ਼੍ਰੇਣੀ ਅਨੁਸਾਰ ਫਿਲਟਰ ਕਰੋ',
+  },
+  customYearRange: {
+    en: 'Custom Year Range',
+    pa: 'ਕਸਟਮ ਸਾਲ ਰੇਂਜ',
+  },
+  eventsShown: {
+    en: 'Events Shown',
+    pa: 'ਦਿਖਾਈਆਂ ਗਈਆਂ ਘਟਨਾਵਾਂ',
+  },
+  showImportantEventsOnly: {
+    en: 'Show Important Events Only',
+    pa: 'ਸਿਰਫ਼ ਮਹੱਤਵਪੂਰਨ ਘਟਨਾਵਾਂ ਦਿਖਾਓ',
+  },
+  allEvents: {
+    en: 'All Events',
+    pa: 'ਸਾਰੀਆਂ ਘਟਨਾਵਾਂ',
+  },
+  guruPeriod: {
+    en: 'Guru Period',
+    pa: 'ਗੁਰੂ ਕਾਲ',
+  },
+  mislPeriod: {
+    en: 'Misl Period',
+    pa: 'ਮਿਸਲ ਕਾਲ',
+  },
+  sikhEmpire: {
+    en: 'Sikh Empire',
+    pa: 'ਸਿੱਖ ਸਾਮਰਾਜ',
+  },
+  britishRule: {
+    en: 'British Rule',
+    pa: 'ਬ੍ਰਿਟਿਸ਼ ਰਾਜ',
+  },
+  modernEra: {
+    en: 'Modern Era',
+    pa: 'ਆਧੁਨਿਕ ਯੁੱਗ',
+  },
+  allCategories: {
+    en: 'All Categories',
+    pa: 'ਸਾਰੀਆਂ ਸ਼੍ਰੇਣੀਆਂ',
+  },
+  gurus: {
+    en: 'Gurus',
+    pa: 'ਗੁਰੂ',
+  },
+  battles: {
+    en: 'Battles',
+    pa: 'ਲੜਾਈਆਂ',
+  },
+  temples: {
+    en: 'Temples',
+    pa: 'ਗੁਰਦੁਆਰੇ',
+  },
+  scriptures: {
+    en: 'Scriptures',
+    pa: 'ਗ੍ਰੰਥ',
+  },
+  political: {
+    en: 'Political',
+    pa: 'ਰਾਜਨੀਤਿਕ',
+  },
+  other: {
+    en: 'Other',
+    pa: 'ਹੋਰ',
   }
 };

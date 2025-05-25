@@ -12,7 +12,7 @@ interface TimelineEventProps {
 }
 
 const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
-  const { language } = useLanguage();
+  const { currentLanguage } = useLanguage();
   
   // Determine category-based styling
   const getCategoryStyle = () => {
@@ -52,9 +52,9 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
   const isEven = index % 2 === 0;
   
   // Use the appropriate language version of the event data
-  const title = language === 'en' ? event.title : (event.titlePa || event.title);
-  const description = language === 'en' ? event.description : (event.descriptionPa || event.description);
-  const category = language === 'en' ? event.category : 
+  const title = currentLanguage === 'en' ? event.title : (event.titlePa || event.title);
+  const description = currentLanguage === 'en' ? event.description : (event.descriptionPa || event.description);
+  const category = currentLanguage === 'en' ? event.category : 
     (event.category === 'guru' ? 'ਗੁਰੂ' : 
      event.category === 'battle' ? 'ਯੁੱਧ' : 
      event.category === 'temple' ? 'ਮੰਦਰ' : 
@@ -103,7 +103,7 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
             {event.important && (
               <span className="text-xs uppercase tracking-wide px-2 py-1 bg-sikh-amber text-sikh-blue rounded-full shadow-sm flex items-center gap-1">
                 <Star className="w-3 h-3" />
-                {language === 'en' ? 'Important' : 'ਮਹੱਤਵਪੂਰਨ'}
+                {currentLanguage === 'en' ? 'Important' : 'ਮਹੱਤਵਪੂਰਨ'}
               </span>
             )}
           </div>
