@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { sikhHistory } from '@/data/sikhHistory';
+import { useEventManagement } from '@/hooks/useEventManagement';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { 
@@ -12,8 +12,8 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
-import { Edit, Plus, Search, Trash2, Tag } from 'lucide-react';
-import { toast } from '@/components/ui/use-toast';
+import { Edit, Plus, Search, Trash2, Tag, Loader2 } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 interface EventsListProps {
   onSelectEvent: (eventId: string) => void;
@@ -23,13 +23,11 @@ interface EventsListProps {
 const EventsList: React.FC<EventsListProps> = ({ onSelectEvent, onCreateNew }) => {
   const { t, currentLanguage } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
-  const [events, setEvents] = useState(sikhHistory);
+  const { events, deleteEvent, isLoading } = useEventManagement();
   
-  // In a real app, we'd persist this to a database
   const handleDeleteEvent = (eventId: string) => {
     if (confirm(t('confirmDelete'))) {
-      // For demo purposes, we'll just filter the events in memory
-      setEvents(events.filter(event => event.id !== eventId));
+      deleteEvent(eventId);
       toast({
         title: t('eventDeleted'),
         description: t('eventDeletedDescription'),
@@ -48,6 +46,15 @@ const EventsList: React.FC<EventsListProps> = ({ onSelectEvent, onCreateNew }) =
       tags.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="h-8 w-8 animate-spin text-sikh-blue" />
+        <span className="ml-2 text-sikh-blue">Loading events...</span>
+      </div>
+    );
+  }
   
   return (
     <div>

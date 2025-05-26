@@ -1,185 +1,217 @@
 
-import React, { useState } from 'react';
-import TimelineEvent from './TimelineEvent';
-import { sikhHistory, TimelineEvent as TimelineEventType } from '../data/sikhHistory';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Slider } from '@/components/ui/slider';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Calendar, Clock, FileText, Star } from 'lucide-react';
+import TimelineEvent from './TimelineEvent';
+import { useEventManagement } from '@/hooks/useEventManagement';
+import { TimelineEvent as TimelineEventType } from '@/data/sikhHistory';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Search, Filter, Calendar, Users, Sword, Crown, BookOpen, Building, Scroll, MapPin, Star, Loader2 } from 'lucide-react';
 
-const Timeline: React.FC = () => {
-  const { t } = useLanguage();
-  const [startYear, setStartYear] = useState(1469);
-  const [endYear, setEndYear] = useState(2019);
-  const [filteredEvents, setFilteredEvents] = useState<TimelineEventType[]>(sikhHistory);
-  const [activeTab, setActiveTab] = useState('all');
-  
-  // Define time periods with proper date ranges
-  const periods = [
-    { id: 'all', name: t("allEvents"), startYear: 1469, endYear: 2019, icon: <FileText className="w-4 h-4 mr-1" /> },
-    { id: 'gurus', name: t("guruPeriod"), startYear: 1469, endYear: 1708, icon: <Star className="w-4 h-4 mr-1" /> },
-    { id: 'misl', name: t("mislPeriod"), startYear: 1710, endYear: 1798, icon: <Clock className="w-4 h-4 mr-1" /> },
-    { id: 'empire', name: t("sikhEmpire"), startYear: 1799, endYear: 1849, icon: <Star className="w-4 h-4 mr-1" /> },
-    { id: 'british', name: t("britishRule"), startYear: 1849, endYear: 1947, icon: <Clock className="w-4 h-4 mr-1" /> },
-    { id: 'modern', name: t("modernEra"), startYear: 1947, endYear: 2019, icon: <Calendar className="w-4 h-4 mr-1" /> }
-  ];
-  
-  const categories = [
-    { id: 'all', name: t("allCategories") },
-    { id: 'guru', name: t("gurus") },
-    { id: 'battle', name: t("battles") },
-    { id: 'temple', name: t("temples") },
-    { id: 'scripture', name: t("scriptures") },
-    { id: 'political', name: t("political") },
-    { id: 'martyrdom', name: t("martyrdom") },
-    { id: 'historical', name: t("historical") },
-    { id: 'establishment', name: t("establishment") },
-    { id: 'other', name: t("other") }
-  ];
-  
-  const handlePeriodChange = (periodId: string) => {
-    const period = periods.find(p => p.id === periodId);
-    if (period) {
-      setStartYear(period.startYear);
-      setEndYear(period.endYear);
-      filterEvents(period.startYear, period.endYear, activeTab === 'important' ? 'important' : activeTab === 'all' ? 'all' : activeTab);
-    }
+const Timeline = () => {
+  const { t, currentLanguage } = useLanguage();
+  const { events, isLoading } = useEventManagement();
+  const [filteredEvents, setFilteredEvents] = useState<TimelineEventType[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedImportance, setSelectedImportance] = useState<string>('all');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+
+  const categoryIcons = {
+    guru: Users,
+    battle: Sword,
+    temple: Building,
+    scripture: BookOpen,
+    political: Crown,
+    martyrdom: Star,
+    historical: Calendar,
+    establishment: MapPin,
+    general: Calendar,
+    other: Calendar
   };
-  
-  const handleCategoryChange = (categoryId: string) => {
-    setActiveTab(categoryId);
-    filterEvents(startYear, endYear, categoryId === 'all' ? 'all' : categoryId === 'important' ? 'important' : categoryId);
-  };
-  
-  const filterEvents = (start: number, end: number, category: string) => {
-    let filtered = sikhHistory.filter(event => event.year >= start && event.year <= end);
-    
-    if (category !== 'all') {
-      if (category === 'important') {
-        filtered = filtered.filter(event => event.important);
-      } else {
-        filtered = filtered.filter(event => event.category === category);
-      }
+
+  useEffect(() => {
+    let filtered = [...events];
+
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(event => {
+        const title = currentLanguage === 'en' ? event.title_en : event.title_pa;
+        const description = currentLanguage === 'en' ? event.description_en : event.description_pa;
+        const tags = event.tags?.join(' ') || '';
+        
+        return (
+          title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          tags.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          event.year.toString().includes(searchTerm)
+        );
+      });
     }
-    
+
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(event => event.category === selectedCategory);
+    }
+
+    // Filter by importance
+    if (selectedImportance !== 'all') {
+      filtered = filtered.filter(event => 
+        selectedImportance === 'important' ? event.important : !event.important
+      );
+    }
+
+    // Sort by year
+    filtered.sort((a, b) => {
+      return sortOrder === 'asc' ? a.year - b.year : b.year - a.year;
+    });
+
     setFilteredEvents(filtered);
-  };
+  }, [events, searchTerm, selectedCategory, selectedImportance, sortOrder, currentLanguage]);
 
-  const handleYearSliderChange = (values: number[]) => {
-    const [start, end] = values;
-    setStartYear(start);
-    setEndYear(end);
-    filterEvents(start, end, activeTab === 'important' ? 'important' : activeTab === 'all' ? 'all' : activeTab);
-  };
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin text-sikh-blue" />
+          <span className="ml-2 text-sikh-blue">Loading timeline...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8 bg-white p-6 rounded-xl shadow-lg border border-sikh-amber/20 bg-gradient-to-br from-white to-sikh-light">
-        <h2 className="text-2xl font-bold text-sikh-blue mb-4 flex items-center">
-          <Calendar className="w-5 h-5 mr-2 text-sikh-amber" />
-          {t("exploreTheTimeline")}
+      <div className="text-center mb-8">
+        <h2 className="text-3xl md:text-4xl font-bold text-sikh-blue mb-4 flex items-center justify-center">
+          <Calendar className="w-8 h-8 mr-3 text-sikh-amber" />
+          {t('timelineTitle')}
         </h2>
-        
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-3 text-sikh-navy flex items-center">
-            <Clock className="w-4 h-4 mr-2 text-sikh-amber" />
-            {t("selectTimePeriod")}
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {periods.map((period) => (
-              <Button
-                key={period.id}
-                variant={period.startYear === startYear && period.endYear === endYear ? "default" : "outline"}
-                onClick={() => handlePeriodChange(period.id)}
-                className={`transition-all duration-300 ${
-                  period.startYear === startYear && period.endYear === endYear 
-                    ? "bg-sikh-amber text-sikh-navy shadow-md" 
-                    : "border-sikh-blue/50 hover:border-sikh-amber hover:text-sikh-navy"
-                }`}
-              >
-                {period.icon}
-                {period.name}
-              </Button>
-            ))}
-          </div>
-        </div>
-        
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-3 text-sikh-navy flex items-center">
-            <FileText className="w-4 h-4 mr-2 text-sikh-amber" />
-            {t("filterByCategory")}
-          </h3>
-          <Tabs defaultValue="all" value={activeTab} onValueChange={handleCategoryChange} className="w-full">
-            <TabsList className="w-full grid grid-cols-3 md:grid-cols-5 lg:grid-cols-10 gap-1 h-auto bg-sikh-blue/5 p-1 rounded-lg">
-              {categories.map((category) => (
-                <TabsTrigger 
-                  key={category.id} 
-                  value={category.id} 
-                  className="py-2 px-3 data-[state=active]:bg-sikh-amber data-[state=active]:text-sikh-navy data-[state=active]:shadow-md transition-all text-xs"
-                >
-                  {category.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-        </div>
-        
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-3 text-sikh-navy flex items-center">
-            <Calendar className="w-4 h-4 mr-2 text-sikh-amber" />
-            {t("customYearRange")}: <span className="text-sikh-amber ml-2">{startYear} - {endYear}</span>
-          </h3>
-          <div className="px-3 py-6">
-            <Slider
-              defaultValue={[startYear, endYear]}
-              min={1469}
-              max={2019}
-              step={1}
-              value={[startYear, endYear]}
-              onValueChange={handleYearSliderChange}
-              className="mt-6"
-            />
-            <div className="flex justify-between mt-2 text-sm text-gray-600">
-              <span>1469</span>
-              <span>2019</span>
-            </div>
-          </div>
-        </div>
-        
-        <div className="flex justify-between items-center">
-          <span className="text-sm bg-sikh-blue text-white px-3 py-1 rounded-full shadow-sm">
-            {t("eventsShown")}: {filteredEvents.length}
-          </span>
-          <Button 
-            variant="outline" 
-            onClick={() => handleCategoryChange('important')}
-            className={`transition-all duration-300 ${
-              activeTab === 'important' 
-                ? "bg-sikh-amber text-sikh-blue border-sikh-amber shadow-md" 
-                : "border-sikh-amber text-sikh-blue hover:bg-sikh-amber/20"
-            }`}
-          >
-            <Star className="w-4 h-4 mr-2" />
-            {t("showImportantEventsOnly")}
-          </Button>
-        </div>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          {t('timelineDescription')}
+        </p>
       </div>
-      
-      <div className="timeline-container relative">
-        <div className="timeline-line"></div>
-        <div className="flex flex-col md:flex-row md:flex-wrap">
-          {filteredEvents.length > 0 ? (
-            filteredEvents.map((event, index) => (
-              <TimelineEvent key={event.id} event={event} index={index} />
-            ))
-          ) : (
-            <div className="w-full text-center p-10 bg-white/80 rounded-xl shadow-md border border-sikh-amber/20">
-              <p className="text-lg font-semibold text-gray-500">{t("noEventsFound")}</p>
+
+      {/* Filters */}
+      <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-sikh-amber/20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+            <Input
+              className="pl-10"
+              placeholder={t('searchPlaceholder')}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger>
+              <Filter className="w-4 h-4 mr-2" />
+              <SelectValue placeholder={t('selectCategory')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('allCategories')}</SelectItem>
+              <SelectItem value="guru">{t('guru')}</SelectItem>
+              <SelectItem value="battle">{t('battle')}</SelectItem>
+              <SelectItem value="temple">{t('temple')}</SelectItem>
+              <SelectItem value="scripture">{t('scripture')}</SelectItem>
+              <SelectItem value="political">{t('political')}</SelectItem>
+              <SelectItem value="martyrdom">{t('martyrdom')}</SelectItem>
+              <SelectItem value="historical">{t('historical')}</SelectItem>
+              <SelectItem value="establishment">{t('establishment')}</SelectItem>
+              <SelectItem value="general">{t('general')}</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={selectedImportance} onValueChange={setSelectedImportance}>
+            <SelectTrigger>
+              <Star className="w-4 h-4 mr-2" />
+              <SelectValue placeholder={t('selectImportance')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('allEvents')}</SelectItem>
+              <SelectItem value="important">{t('importantEvents')}</SelectItem>
+              <SelectItem value="regular">{t('regularEvents')}</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={sortOrder} onValueChange={(value: 'asc' | 'desc') => setSortOrder(value)}>
+            <SelectTrigger>
+              <Calendar className="w-4 h-4 mr-2" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="asc">{t('oldestFirst')}</SelectItem>
+              <SelectItem value="desc">{t('newestFirst')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={selectedCategory === 'all' && selectedImportance === 'all' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => {
+              setSelectedCategory('all');
+              setSelectedImportance('all');
+              setSearchTerm('');
+            }}
+          >
+            {t('clearFilters')}
+          </Button>
+          {selectedCategory !== 'all' && (
+            <div className="flex items-center bg-sikh-amber/10 text-sikh-blue px-3 py-1 rounded-full text-sm">
+              <Filter className="w-3 h-3 mr-1" />
+              {t(selectedCategory)}
             </div>
           )}
         </div>
       </div>
+
+      {/* Timeline */}
+      <div className="relative">
+        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-sikh-amber via-sikh-gold to-sikh-amber"></div>
+        
+        <div className="space-y-8">
+          {filteredEvents.length > 0 ? (
+            filteredEvents.map((event, index) => {
+              const IconComponent = categoryIcons[event.category] || Calendar;
+              return (
+                <TimelineEvent
+                  key={event.id}
+                  event={event}
+                  isLeft={index % 2 === 0}
+                  icon={<IconComponent className="w-5 h-5" />}
+                />
+              );
+            })
+          ) : (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+                <Search className="w-8 h-8 text-gray-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">{t('noEventsFound')}</h3>
+              <p className="text-gray-500">{t('noEventsDescription')}</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {filteredEvents.length > 0 && (
+        <div className="text-center mt-12 p-6 bg-gradient-to-r from-sikh-amber/10 to-sikh-light rounded-xl border border-sikh-amber/20">
+          <h3 className="text-xl font-bold text-sikh-blue mb-2">
+            {t('totalEvents', { count: filteredEvents.length })}
+          </h3>
+          <p className="text-gray-600">
+            {t('timelineSpan', { 
+              start: Math.min(...filteredEvents.map(e => e.year)),
+              end: Math.max(...filteredEvents.map(e => e.year))
+            })}
+          </p>
+        </div>
+      )}
     </div>
   );
 };

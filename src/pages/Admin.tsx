@@ -14,7 +14,6 @@ const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<'list' | 'editor' | 'create' | 'password'>('list');
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -54,15 +53,12 @@ const Admin = () => {
   const handleBackToList = () => {
     setActiveView('list');
     setSelectedEventId(null);
-    // Trigger refresh of events list
-    setRefreshTrigger(prev => prev + 1);
   };
 
   const handleEventSave = (eventData: any) => {
-    // In a real app, this would save to database
-    // For now, we'll just trigger a refresh
     console.log('Event saved:', eventData);
-    setRefreshTrigger(prev => prev + 1);
+    // The data is automatically persisted by the useEventManagement hook
+    // The Timeline component will automatically reflect the changes
   };
 
   if (!isAuthenticated) {
@@ -84,7 +80,6 @@ const Admin = () => {
             <EventsList 
               onSelectEvent={handleSelectEvent} 
               onCreateNew={handleCreateNew}
-              key={refreshTrigger}
             />
           )}
           {(activeView === 'editor' || activeView === 'create') && (

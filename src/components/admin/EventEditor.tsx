@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { sikhHistory } from '@/data/sikhHistory';
+import { useEventManagement } from '@/hooks/useEventManagement';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -35,15 +35,14 @@ interface EventEditorProps {
 
 const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSave }) => {
   const { t, currentLanguage } = useLanguage();
+  const { getEvent, addEvent, updateEvent } = useEventManagement();
   const [activeTab, setActiveTab] = useState<'english' | 'punjabi'>('english');
   const [newTag, setNewTag] = useState('');
   const [editingTagIndex, setEditingTagIndex] = useState<number | null>(null);
   const [editingTagValue, setEditingTagValue] = useState('');
   
   // Find the event if we're editing
-  const existingEvent = eventId 
-    ? sikhHistory.find(event => event.id === eventId) 
-    : null;
+  const existingEvent = eventId ? getEvent(eventId) : null;
   
   // Define the event form state
   const [formData, setFormData] = useState({
@@ -137,19 +136,35 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
       return;
     }
     
-    // Call the onSave callback if provided (for immediate reflection)
-    if (onSave) {
-      onSave(formData);
+    // Save the event
+    try {
+      if (isNew) {
+        addEvent(formData);
+        toast({
+          title: t('eventCreated'),
+          description: t('eventCreatedDescription'),
+        });
+      } else {
+        updateEvent(formData.id, formData);
+        toast({
+          title: t('eventUpdated'),
+          description: t('eventUpdatedDescription'),
+        });
+      }
+      
+      // Call the onSave callback if provided
+      if (onSave) {
+        onSave(formData);
+      }
+      
+      onBack();
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to save event. Please try again.',
+        variant: 'destructive'
+      });
     }
-    
-    toast({
-      title: isNew ? t('eventCreated') : t('eventUpdated'),
-      description: isNew 
-        ? t('eventCreatedDescription') 
-        : t('eventUpdatedDescription'),
-    });
-    
-    onBack();
   };
   
   return (
