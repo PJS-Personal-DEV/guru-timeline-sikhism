@@ -14,6 +14,7 @@ const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<'list' | 'editor' | 'create' | 'password'>('list');
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -32,7 +33,6 @@ const Admin = () => {
   const handleLogin = (success: boolean) => {
     if (success) {
       setIsAuthenticated(true);
-      // Store token in localStorage - in a real app, this would be a JWT
       localStorage.setItem('admin_token', 'dummy_token');
     }
   };
@@ -54,6 +54,15 @@ const Admin = () => {
   const handleBackToList = () => {
     setActiveView('list');
     setSelectedEventId(null);
+    // Trigger refresh of events list
+    setRefreshTrigger(prev => prev + 1);
+  };
+
+  const handleEventSave = (eventData: any) => {
+    // In a real app, this would save to database
+    // For now, we'll just trigger a refresh
+    console.log('Event saved:', eventData);
+    setRefreshTrigger(prev => prev + 1);
   };
 
   if (!isAuthenticated) {
@@ -72,13 +81,18 @@ const Admin = () => {
         />
         <div className="flex-1 p-6">
           {activeView === 'list' && (
-            <EventsList onSelectEvent={handleSelectEvent} onCreateNew={handleCreateNew} />
+            <EventsList 
+              onSelectEvent={handleSelectEvent} 
+              onCreateNew={handleCreateNew}
+              key={refreshTrigger}
+            />
           )}
           {(activeView === 'editor' || activeView === 'create') && (
             <EventEditor 
               eventId={selectedEventId}
               isNew={activeView === 'create'}
-              onBack={handleBackToList} 
+              onBack={handleBackToList}
+              onSave={handleEventSave}
             />
           )}
           {activeView === 'password' && (

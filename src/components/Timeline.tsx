@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import TimelineEvent from './TimelineEvent';
 import { sikhHistory, TimelineEvent as TimelineEventType } from '../data/sikhHistory';
@@ -10,18 +11,18 @@ import { Calendar, Clock, FileText, Star } from 'lucide-react';
 const Timeline: React.FC = () => {
   const { t } = useLanguage();
   const [startYear, setStartYear] = useState(1469);
-  const [endYear, setEndYear] = useState(2010);
+  const [endYear, setEndYear] = useState(2019);
   const [filteredEvents, setFilteredEvents] = useState<TimelineEventType[]>(sikhHistory);
   const [activeTab, setActiveTab] = useState('all');
   
-  // Define time periods
+  // Define time periods with proper date ranges
   const periods = [
-    { id: 'all', name: t("allEvents"), startYear: 1469, endYear: 2010, icon: <FileText className="w-4 h-4 mr-1" /> },
+    { id: 'all', name: t("allEvents"), startYear: 1469, endYear: 2019, icon: <FileText className="w-4 h-4 mr-1" /> },
     { id: 'gurus', name: t("guruPeriod"), startYear: 1469, endYear: 1708, icon: <Star className="w-4 h-4 mr-1" /> },
-    { id: 'misl', name: t("mislPeriod"), startYear: 1709, endYear: 1798, icon: <Clock className="w-4 h-4 mr-1" /> },
+    { id: 'misl', name: t("mislPeriod"), startYear: 1710, endYear: 1798, icon: <Clock className="w-4 h-4 mr-1" /> },
     { id: 'empire', name: t("sikhEmpire"), startYear: 1799, endYear: 1849, icon: <Star className="w-4 h-4 mr-1" /> },
     { id: 'british', name: t("britishRule"), startYear: 1849, endYear: 1947, icon: <Clock className="w-4 h-4 mr-1" /> },
-    { id: 'modern', name: t("modernEra"), startYear: 1947, endYear: 2010, icon: <Calendar className="w-4 h-4 mr-1" /> }
+    { id: 'modern', name: t("modernEra"), startYear: 1947, endYear: 2019, icon: <Calendar className="w-4 h-4 mr-1" /> }
   ];
   
   const categories = [
@@ -31,6 +32,9 @@ const Timeline: React.FC = () => {
     { id: 'temple', name: t("temples") },
     { id: 'scripture', name: t("scriptures") },
     { id: 'political', name: t("political") },
+    { id: 'martyrdom', name: t("martyrdom") },
+    { id: 'historical', name: t("historical") },
+    { id: 'establishment', name: t("establishment") },
     { id: 'other', name: t("other") }
   ];
   
@@ -107,12 +111,12 @@ const Timeline: React.FC = () => {
             {t("filterByCategory")}
           </h3>
           <Tabs defaultValue="all" value={activeTab} onValueChange={handleCategoryChange} className="w-full">
-            <TabsList className="w-full grid grid-cols-3 md:grid-cols-7 gap-1 h-auto bg-sikh-blue/5 p-1 rounded-lg">
+            <TabsList className="w-full grid grid-cols-3 md:grid-cols-5 lg:grid-cols-10 gap-1 h-auto bg-sikh-blue/5 p-1 rounded-lg">
               {categories.map((category) => (
                 <TabsTrigger 
                   key={category.id} 
                   value={category.id} 
-                  className="py-2 px-3 data-[state=active]:bg-sikh-amber data-[state=active]:text-sikh-navy data-[state=active]:shadow-md transition-all"
+                  className="py-2 px-3 data-[state=active]:bg-sikh-amber data-[state=active]:text-sikh-navy data-[state=active]:shadow-md transition-all text-xs"
                 >
                   {category.name}
                 </TabsTrigger>
@@ -130,7 +134,7 @@ const Timeline: React.FC = () => {
             <Slider
               defaultValue={[startYear, endYear]}
               min={1469}
-              max={2010}
+              max={2019}
               step={1}
               value={[startYear, endYear]}
               onValueChange={handleYearSliderChange}
@@ -138,7 +142,7 @@ const Timeline: React.FC = () => {
             />
             <div className="flex justify-between mt-2 text-sm text-gray-600">
               <span>1469</span>
-              <span>2010</span>
+              <span>2019</span>
             </div>
           </div>
         </div>

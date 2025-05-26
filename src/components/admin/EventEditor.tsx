@@ -13,8 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { toast } from '@/components/ui/use-toast';
-import { ArrowLeft, Save } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
+import { ArrowLeft, Save, Plus, X, Edit } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -24,16 +24,21 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 
 interface EventEditorProps {
   eventId: string | null;
   isNew: boolean;
   onBack: () => void;
+  onSave?: (eventData: any) => void;
 }
 
-const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack }) => {
+const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSave }) => {
   const { t, currentLanguage } = useLanguage();
   const [activeTab, setActiveTab] = useState<'english' | 'punjabi'>('english');
+  const [newTag, setNewTag] = useState('');
+  const [editingTagIndex, setEditingTagIndex] = useState<number | null>(null);
+  const [editingTagValue, setEditingTagValue] = useState('');
   
   // Find the event if we're editing
   const existingEvent = eventId 
@@ -50,10 +55,10 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack }) => 
     description_pa: existingEvent?.description_pa || '',
     category: existingEvent?.category || 'general',
     important: existingEvent?.important || false,
+    tags: existingEvent?.tags || [],
   });
   
   useEffect(() => {
-    // Set initial tab based on current language
     setActiveTab(currentLanguage === 'en' ? 'english' : 'punjabi');
   }, [currentLanguage]);
   
@@ -70,6 +75,44 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack }) => 
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
+  };
+
+  // Tag management functions
+  const addTag = () => {
+    if (newTag.trim() && !formData.tags.includes(newTag.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        tags: [...prev.tags, newTag.trim()]
+      }));
+      setNewTag('');
+    }
+  };
+
+  const removeTag = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      tags: prev.tags.filter((_, i) => i !== index)
+    }));
+  };
+
+  const startEditingTag = (index: number) => {
+    setEditingTagIndex(index);
+    setEditingTagValue(formData.tags[index]);
+  };
+
+  const saveEditingTag = () => {
+    if (editingTagValue.trim() && editingTagIndex !== null) {
+      const newTags = [...formData.tags];
+      newTags[editingTagIndex] = editingTagValue.trim();
+      setFormData(prev => ({ ...prev, tags: newTags }));
+      setEditingTagIndex(null);
+      setEditingTagValue('');
+    }
+  };
+
+  const cancelEditingTag = () => {
+    setEditingTagIndex(null);
+    setEditingTagValue('');
   };
   
   const handleSubmit = (e: React.FormEvent) => {
@@ -94,8 +137,11 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack }) => 
       return;
     }
     
-    // In a real app, we would save to a database here
-    // For now, just show a success toast
+    // Call the onSave callback if provided (for immediate reflection)
+    if (onSave) {
+      onSave(formData);
+    }
+    
     toast({
       title: isNew ? t('eventCreated') : t('eventUpdated'),
       description: isNew 
@@ -103,7 +149,6 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack }) => 
         : t('eventUpdatedDescription'),
     });
     
-    // Go back to the events list
     onBack();
   };
   
@@ -163,6 +208,10 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack }) => 
                     <SelectItem value="battle">{t('battle')}</SelectItem>
                     <SelectItem value="martyrdom">{t('martyrdom')}</SelectItem>
                     <SelectItem value="historical">{t('historical')}</SelectItem>
+                    <SelectItem value="temple">{t('temple')}</SelectItem>
+                    <SelectItem value="scripture">{t('scripture')}</SelectItem>
+                    <SelectItem value="political">{t('political')}</SelectItem>
+                    <SelectItem value="establishment">{t('establishment')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -181,6 +230,77 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack }) => 
                     <SelectItem value="true">{t('high')}</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+            </div>
+
+            {/* Tag Management Section */}
+            <div>
+              <Label>Tags</Label>
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <Input
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    placeholder="Add a new tag..."
+                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                  />
+                  <Button type="button" onClick={addTag} size="sm">
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                
+                <div className="flex flex-wrap gap-2">
+                  {formData.tags.map((tag, index) => (
+                    <div key={index} className="flex items-center">
+                      {editingTagIndex === index ? (
+                        <div className="flex items-center gap-1">
+                          <Input
+                            value={editingTagValue}
+                            onChange={(e) => setEditingTagValue(e.target.value)}
+                            className="h-8 w-24"
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                saveEditingTag();
+                              } else if (e.key === 'Escape') {
+                                cancelEditingTag();
+                              }
+                            }}
+                            autoFocus
+                          />
+                          <Button type="button" size="sm" variant="ghost" onClick={saveEditingTag}>
+                            <Plus className="h-3 w-3" />
+                          </Button>
+                          <Button type="button" size="sm" variant="ghost" onClick={cancelEditingTag}>
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <Badge variant="secondary" className="flex items-center gap-1">
+                          {tag}
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            className="h-4 w-4 p-0 hover:bg-transparent"
+                            onClick={() => startEditingTag(index)}
+                          >
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            className="h-4 w-4 p-0 hover:bg-transparent"
+                            onClick={() => removeTag(index)}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </Badge>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             
