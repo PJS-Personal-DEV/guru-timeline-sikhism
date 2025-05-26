@@ -122,6 +122,7 @@ const Timeline = () => {
               <SelectItem value="historical">Historical</SelectItem>
               <SelectItem value="establishment">Establishment</SelectItem>
               <SelectItem value="general">General</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
             </SelectContent>
           </Select>
 

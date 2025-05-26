@@ -6,7 +6,7 @@ export interface TimelineEvent {
   title_pa: string;
   description_en: string;
   description_pa: string;
-  category: 'guru' | 'battle' | 'temple' | 'scripture' | 'political' | 'martyrdom' | 'historical' | 'establishment' | 'other';
+  category: 'guru' | 'battle' | 'temple' | 'scripture' | 'political' | 'martyrdom' | 'historical' | 'establishment' | 'general' | 'other';
   important: boolean;
   tags?: string[];
 }

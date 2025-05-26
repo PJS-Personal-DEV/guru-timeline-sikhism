@@ -34,6 +34,8 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, isLeft, icon }) =>
         return 'border-l-4 border-orange-600 bg-gradient-to-br from-white to-orange-50';
       case 'establishment':
         return 'border-l-4 border-teal-600 bg-gradient-to-br from-white to-teal-50';
+      case 'general':
+        return 'border-l-4 border-indigo-500 bg-gradient-to-br from-white to-indigo-50';
       default:
         return 'border-l-4 border-gray-400 bg-gradient-to-br from-white to-gray-50';
     }
@@ -50,7 +52,8 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, isLeft, icon }) =>
      event.category === 'political' ? 'ਰਾਜਨੀਤਿਕ' : 
      event.category === 'martyrdom' ? 'ਸ਼ਹੀਦੀ' :
      event.category === 'historical' ? 'ਇਤਿਹਾਸਿਕ' :
-     event.category === 'establishment' ? 'ਸਥਾਪਨਾ' : 'ਹੋਰ');
+     event.category === 'establishment' ? 'ਸਥਾਪਨਾ' : 
+     event.category === 'general' ? 'ਆਮ' : 'ਹੋਰ');
 
   return (
     <div 
