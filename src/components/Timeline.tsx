@@ -171,21 +171,36 @@ const Timeline = () => {
         </div>
       </div>
 
-      {/* Timeline */}
-      <div className="relative">
-        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-sikh-amber via-sikh-gold to-sikh-amber"></div>
+      {/* Timeline with central line */}
+      <div className="relative max-w-6xl mx-auto">
+        {/* Central timeline line */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-sikh-amber via-sikh-gold to-sikh-amber shadow-lg hidden md:block"></div>
         
-        <div className="space-y-8">
+        {/* Mobile timeline line */}
+        <div className="absolute left-8 h-full w-1 bg-gradient-to-b from-sikh-amber via-sikh-gold to-sikh-amber shadow-lg md:hidden"></div>
+        
+        <div className="space-y-12">
           {filteredEvents.length > 0 ? (
             filteredEvents.map((event, index) => {
               const IconComponent = categoryIcons[event.category] || Calendar;
               return (
-                <TimelineEvent
-                  key={event.id}
-                  event={event}
-                  isLeft={index % 2 === 0}
-                  icon={<IconComponent className="w-5 h-5" />}
-                />
+                <div key={event.id} className="relative">
+                  {/* Timeline dot */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-sikh-blue rounded-full border-4 border-white shadow-lg z-10 hidden md:flex items-center justify-center">
+                    <div className="w-2 h-2 bg-sikh-amber rounded-full animate-pulse"></div>
+                  </div>
+                  
+                  {/* Mobile timeline dot */}
+                  <div className="absolute left-6 w-6 h-6 bg-sikh-blue rounded-full border-4 border-white shadow-lg z-10 md:hidden flex items-center justify-center">
+                    <div className="w-2 h-2 bg-sikh-amber rounded-full animate-pulse"></div>
+                  </div>
+                  
+                  <TimelineEvent
+                    event={event}
+                    isLeft={index % 2 === 0}
+                    icon={<IconComponent className="w-5 h-5" />}
+                  />
+                </div>
               );
             })
           ) : (

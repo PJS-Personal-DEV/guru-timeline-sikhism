@@ -58,38 +58,50 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, isLeft, icon }) =>
   return (
     <div 
       className={cn(
-        "timeline-event w-full md:w-[45%] mb-8 animate-fade-in",
-        isLeft ? "md:ml-auto md:pl-6 md:pr-0" : "md:mr-auto md:pr-6 md:pl-0"
+        "timeline-event w-full animate-fade-in",
+        // Desktop positioning
+        "md:w-[45%]",
+        isLeft 
+          ? "md:mr-auto md:pr-8 md:text-left" 
+          : "md:ml-auto md:pl-8 md:text-right",
+        // Mobile positioning (always left aligned)
+        "pl-16 pr-4"
       )}
     >
-      <div className={cn(
-        "absolute w-5 h-5 bg-sikh-blue rounded-full z-10 hidden md:block",
-        isLeft ? "md:left-[calc(50%+3px)]" : "md:left-[calc(50%-8px)]"
-      )}>
-        <div className="w-3 h-3 bg-sikh-amber rounded-full absolute top-1 left-1 animate-pulse"></div>
-      </div>
-      
       <Card className={cn(
-        "hover:shadow-lg transition-all duration-300 overflow-hidden",
+        "hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1",
         getCategoryStyle(),
-        event.important ? "ring-2 ring-sikh-amber" : ""
+        event.important ? "ring-2 ring-sikh-amber shadow-lg" : "shadow-md"
       )}>
         <CardHeader className="pb-2">
-          <div className="flex justify-between items-center">
-            <CardTitle className="text-lg md:text-xl font-bold flex items-center gap-2">
+          <div className={cn(
+            "flex items-center gap-2",
+            isLeft ? "md:flex-row" : "md:flex-row-reverse"
+          )}>
+            <CardTitle className="text-lg md:text-xl font-bold flex items-center gap-2 flex-1">
               {icon}
-              {title}
+              <span className={cn(isLeft ? "md:text-left" : "md:text-right", "text-left")}>{title}</span>
             </CardTitle>
-            <span className="text-sm font-semibold bg-sikh-blue text-white px-3 py-1 rounded-full shadow-sm flex items-center">
+            <span className="text-sm font-semibold bg-sikh-blue text-white px-3 py-1 rounded-full shadow-sm flex items-center shrink-0">
               <Calendar className="w-3 h-3 mr-1" />
               {event.year}
             </span>
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm md:text-base mb-3">{description}</p>
+          <p className={cn(
+            "text-sm md:text-base mb-3",
+            isLeft ? "md:text-left" : "md:text-right",
+            "text-left"
+          )}>
+            {description}
+          </p>
           
-          <div className="flex flex-wrap gap-2 mb-3">
+          <div className={cn(
+            "flex flex-wrap gap-2 mb-3",
+            isLeft ? "md:justify-start" : "md:justify-end",
+            "justify-start"
+          )}>
             <span className="text-xs uppercase tracking-wide px-2 py-1 bg-gray-100 rounded-full shadow-sm flex items-center gap-1">
               {icon}
               {category}
@@ -103,7 +115,11 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, isLeft, icon }) =>
           </div>
           
           {event.tags && event.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1">
+            <div className={cn(
+              "flex flex-wrap gap-1",
+              isLeft ? "md:justify-start" : "md:justify-end",
+              "justify-start"
+            )}>
               {event.tags.map((tag, tagIndex) => (
                 <span
                   key={tagIndex}
