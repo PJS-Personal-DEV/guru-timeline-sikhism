@@ -16,8 +16,12 @@ const Index = () => {
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-sikh-blue via-sikh-blue to-sikh-navy text-white py-16">
         <div className="container mx-auto px-4 text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-sikh-amber flex items-center justify-center">
-            <span className="text-sikh-blue text-3xl font-bold">ੴ</span>
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm">
+            <img 
+              src="/lovable-uploads/3a530b36-c817-4d1a-bcfd-af9f81043956.png" 
+              alt="Sikh History Logo" 
+              className="w-16 h-16 rounded-full"
+            />
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 font-header">{t("heroTitle")}</h1>
           <p className="text-xl md:text-2xl max-w-3xl mx-auto text-sikh-amber">
