@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Header from '@/components/Header';
-import Timeline from '@/components/Timeline';
+import EraTimeline from '@/components/EraTimeline';
 import Footer from '@/components/Footer';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Calendar, Star, FileText } from 'lucide-react';
@@ -87,7 +87,7 @@ const Index = () => {
       
       {/* Timeline Section */}
       <div id="timeline" className="pb-12">
-        <Timeline />
+        <EraTimeline />
       </div>
       
       <Footer />
