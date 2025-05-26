@@ -86,10 +86,10 @@ const Timeline = () => {
       <div className="text-center mb-8">
         <h2 className="text-3xl md:text-4xl font-bold text-sikh-blue mb-4 flex items-center justify-center">
           <Calendar className="w-8 h-8 mr-3 text-sikh-amber" />
-          {t('timelineTitle')}
+          Sikh History Timeline
         </h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          {t('timelineDescription')}
+          Explore the rich history of Sikhism through major events and milestones
         </p>
       </div>
 
@@ -100,7 +100,7 @@ const Timeline = () => {
             <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
             <Input
               className="pl-10"
-              placeholder={t('searchPlaceholder')}
+              placeholder="Search events..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -109,31 +109,31 @@ const Timeline = () => {
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger>
               <Filter className="w-4 h-4 mr-2" />
-              <SelectValue placeholder={t('selectCategory')} />
+              <SelectValue placeholder="Select Category" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t('allCategories')}</SelectItem>
-              <SelectItem value="guru">{t('guru')}</SelectItem>
-              <SelectItem value="battle">{t('battle')}</SelectItem>
-              <SelectItem value="temple">{t('temple')}</SelectItem>
-              <SelectItem value="scripture">{t('scripture')}</SelectItem>
-              <SelectItem value="political">{t('political')}</SelectItem>
-              <SelectItem value="martyrdom">{t('martyrdom')}</SelectItem>
-              <SelectItem value="historical">{t('historical')}</SelectItem>
-              <SelectItem value="establishment">{t('establishment')}</SelectItem>
-              <SelectItem value="general">{t('general')}</SelectItem>
+              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="guru">Guru</SelectItem>
+              <SelectItem value="battle">Battle</SelectItem>
+              <SelectItem value="temple">Temple</SelectItem>
+              <SelectItem value="scripture">Scripture</SelectItem>
+              <SelectItem value="political">Political</SelectItem>
+              <SelectItem value="martyrdom">Martyrdom</SelectItem>
+              <SelectItem value="historical">Historical</SelectItem>
+              <SelectItem value="establishment">Establishment</SelectItem>
+              <SelectItem value="general">General</SelectItem>
             </SelectContent>
           </Select>
 
           <Select value={selectedImportance} onValueChange={setSelectedImportance}>
             <SelectTrigger>
               <Star className="w-4 h-4 mr-2" />
-              <SelectValue placeholder={t('selectImportance')} />
+              <SelectValue placeholder="Select Importance" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t('allEvents')}</SelectItem>
-              <SelectItem value="important">{t('importantEvents')}</SelectItem>
-              <SelectItem value="regular">{t('regularEvents')}</SelectItem>
+              <SelectItem value="all">All Events</SelectItem>
+              <SelectItem value="important">Important Events</SelectItem>
+              <SelectItem value="regular">Regular Events</SelectItem>
             </SelectContent>
           </Select>
 
@@ -143,8 +143,8 @@ const Timeline = () => {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="asc">{t('oldestFirst')}</SelectItem>
-              <SelectItem value="desc">{t('newestFirst')}</SelectItem>
+              <SelectItem value="asc">Oldest First</SelectItem>
+              <SelectItem value="desc">Newest First</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -159,12 +159,12 @@ const Timeline = () => {
               setSearchTerm('');
             }}
           >
-            {t('clearFilters')}
+            Clear Filters
           </Button>
           {selectedCategory !== 'all' && (
             <div className="flex items-center bg-sikh-amber/10 text-sikh-blue px-3 py-1 rounded-full text-sm">
               <Filter className="w-3 h-3 mr-1" />
-              {t(selectedCategory)}
+              {selectedCategory}
             </div>
           )}
         </div>
@@ -192,8 +192,8 @@ const Timeline = () => {
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
                 <Search className="w-8 h-8 text-gray-400" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">{t('noEventsFound')}</h3>
-              <p className="text-gray-500">{t('noEventsDescription')}</p>
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">No events found</h3>
+              <p className="text-gray-500">Try adjusting your search criteria</p>
             </div>
           )}
         </div>
@@ -202,13 +202,10 @@ const Timeline = () => {
       {filteredEvents.length > 0 && (
         <div className="text-center mt-12 p-6 bg-gradient-to-r from-sikh-amber/10 to-sikh-light rounded-xl border border-sikh-amber/20">
           <h3 className="text-xl font-bold text-sikh-blue mb-2">
-            {t('totalEvents', { count: filteredEvents.length })}
+            Total Events: {filteredEvents.length}
           </h3>
           <p className="text-gray-600">
-            {t('timelineSpan', { 
-              start: Math.min(...filteredEvents.map(e => e.year)),
-              end: Math.max(...filteredEvents.map(e => e.year))
-            })}
+            Timeline span: {Math.min(...filteredEvents.map(e => e.year))} - {Math.max(...filteredEvents.map(e => e.year))}
           </p>
         </div>
       )}

@@ -8,10 +8,11 @@ import { Calendar, FileText, Map, Star, Tag } from 'lucide-react';
 
 interface TimelineEventProps {
   event: TimelineEventType;
-  index: number;
+  isLeft: boolean;
+  icon: React.ReactElement;
 }
 
-const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
+const TimelineEvent: React.FC<TimelineEventProps> = ({ event, isLeft, icon }) => {
   const { currentLanguage } = useLanguage();
   
   // Determine category-based styling
@@ -38,31 +39,6 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
     }
   };
 
-  const getCategoryIcon = () => {
-    switch (event.category) {
-      case 'guru':
-        return <Star className="w-4 h-4 text-sikh-amber" />;
-      case 'battle':
-        return <Map className="w-4 h-4 text-red-600" />;
-      case 'temple':
-        return <Map className="w-4 h-4 text-sikh-gold" />;
-      case 'scripture':
-        return <FileText className="w-4 h-4 text-blue-500" />;
-      case 'political':
-        return <Map className="w-4 h-4 text-green-600" />;
-      case 'martyrdom':
-        return <Star className="w-4 h-4 text-purple-600" />;
-      case 'historical':
-        return <Calendar className="w-4 h-4 text-orange-600" />;
-      case 'establishment':
-        return <Map className="w-4 h-4 text-teal-600" />;
-      default:
-        return <FileText className="w-4 h-4 text-gray-400" />;
-    }
-  };
-
-  const isEven = index % 2 === 0;
-  
   // Use the appropriate language version of the event data
   const title = currentLanguage === 'en' ? event.title_en : event.title_pa;
   const description = currentLanguage === 'en' ? event.description_en : event.description_pa;
@@ -80,13 +56,12 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
     <div 
       className={cn(
         "timeline-event w-full md:w-[45%] mb-8 animate-fade-in",
-        isEven ? "md:ml-auto md:pl-6 md:pr-0" : "md:mr-auto md:pr-6 md:pl-0"
+        isLeft ? "md:ml-auto md:pl-6 md:pr-0" : "md:mr-auto md:pr-6 md:pl-0"
       )}
-      style={{ animationDelay: `${index * 0.1}s` }}
     >
       <div className={cn(
         "absolute w-5 h-5 bg-sikh-blue rounded-full z-10 hidden md:block",
-        isEven ? "md:left-[calc(50%+3px)]" : "md:left-[calc(50%-8px)]"
+        isLeft ? "md:left-[calc(50%+3px)]" : "md:left-[calc(50%-8px)]"
       )}>
         <div className="w-3 h-3 bg-sikh-amber rounded-full absolute top-1 left-1 animate-pulse"></div>
       </div>
@@ -99,7 +74,7 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
         <CardHeader className="pb-2">
           <div className="flex justify-between items-center">
             <CardTitle className="text-lg md:text-xl font-bold flex items-center gap-2">
-              {getCategoryIcon()}
+              {icon}
               {title}
             </CardTitle>
             <span className="text-sm font-semibold bg-sikh-blue text-white px-3 py-1 rounded-full shadow-sm flex items-center">
@@ -113,7 +88,7 @@ const TimelineEvent: React.FC<TimelineEventProps> = ({ event, index }) => {
           
           <div className="flex flex-wrap gap-2 mb-3">
             <span className="text-xs uppercase tracking-wide px-2 py-1 bg-gray-100 rounded-full shadow-sm flex items-center gap-1">
-              {getCategoryIcon()}
+              {icon}
               {category}
             </span>
             {event.important && (

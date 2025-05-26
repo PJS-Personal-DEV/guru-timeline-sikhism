@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useEventManagement } from '@/hooks/useEventManagement';
+import { TimelineEvent as TimelineEventType } from '@/data/sikhHistory';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -44,8 +44,8 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
   // Find the event if we're editing
   const existingEvent = eventId ? getEvent(eventId) : null;
   
-  // Define the event form state
-  const [formData, setFormData] = useState({
+  // Define the event form state with proper typing
+  const [formData, setFormData] = useState<TimelineEventType>({
     id: existingEvent?.id || `event_${Date.now()}`,
     year: existingEvent?.year || new Date().getFullYear(),
     title_en: existingEvent?.title_en || '',
@@ -71,6 +71,8 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
   const handleSelectChange = (name: string, value: string) => {
     if (name === 'important') {
       setFormData(prev => ({ ...prev, [name]: value === 'true' }));
+    } else if (name === 'category') {
+      setFormData(prev => ({ ...prev, [name]: value as TimelineEventType['category'] }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
@@ -227,6 +229,7 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
                     <SelectItem value="scripture">{t('scripture')}</SelectItem>
                     <SelectItem value="political">{t('political')}</SelectItem>
                     <SelectItem value="establishment">{t('establishment')}</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
