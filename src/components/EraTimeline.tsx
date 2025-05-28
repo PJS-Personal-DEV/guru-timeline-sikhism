@@ -1,94 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import TimelineEvent from './TimelineEvent';
+import EraTimelineSelector, { eras } from './EraTimelineSelector';
 import { useEventManagement } from '@/hooks/useEventManagement';
 import { TimelineEvent as TimelineEventType } from '@/data/sikhHistory';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, Filter, Calendar, Users, Sword, Crown, BookOpen, Building, Scroll, MapPin, Star, Loader2, Clock } from 'lucide-react';
-
-interface Era {
-  id: string;
-  name: string;
-  name_pa: string;
-  startYear: number;
-  endYear: number;
-  description: string;
-  description_pa: string;
-  color: string;
-  icon: React.ElementType;
-}
-
-const eras: Era[] = [
-  {
-    id: 'gurus',
-    name: 'Era of the Gurus',
-    name_pa: 'ਗੁਰੂਆਂ ਦਾ ਯੁੱਗ',
-    startYear: 1469,
-    endYear: 1708,
-    description: 'The founding period of Sikhism under the ten Gurus',
-    description_pa: 'ਦਸ ਗੁਰੂਆਂ ਦੇ ਅਧੀਨ ਸਿੱਖ ਧਰਮ ਦੀ ਸਥਾਪਨਾ ਦਾ ਕਾਲ',
-    color: 'bg-sikh-amber',
-    icon: Users
-  },
-  {
-    id: 'early_struggles',
-    name: 'Early Struggles',
-    name_pa: 'ਸ਼ੁਰੂਆਤੀ ਸੰਘਰਸ਼',
-    startYear: 1708,
-    endYear: 1748,
-    description: 'Period of Banda Singh Bahadur and early Sikh resistance',
-    description_pa: 'ਬੰਦਾ ਸਿੰਘ ਬਹਾਦਰ ਅਤੇ ਸ਼ੁਰੂਆਤੀ ਸਿੱਖ ਵਿਰੋਧ ਦਾ ਕਾਲ',
-    color: 'bg-red-500',
-    icon: Sword
-  },
-  {
-    id: 'misl_period',
-    name: 'Misl Period',
-    name_pa: 'ਮਿਸਲ ਕਾਲ',
-    startYear: 1748,
-    endYear: 1799,
-    description: 'Era of Sikh confederacies and territorial expansion',
-    description_pa: 'ਸਿੱਖ ਮਿਸਲਾਂ ਅਤੇ ਇਲਾਕਾਈ ਵਿਸਤਾਰ ਦਾ ਯੁੱਗ',
-    color: 'bg-blue-500',
-    icon: MapPin
-  },
-  {
-    id: 'sikh_empire',
-    name: 'Sikh Empire',
-    name_pa: 'ਸਿੱਖ ਸਾਮਰਾਜ',
-    startYear: 1799,
-    endYear: 1849,
-    description: 'Golden period under Maharaja Ranjit Singh',
-    description_pa: 'ਮਹਾਰਾਜਾ ਰਣਜੀਤ ਸਿੰਘ ਦੇ ਅਧੀਨ ਸੁਨਹਿਰਾ ਕਾਲ',
-    color: 'bg-sikh-gold',
-    icon: Crown
-  },
-  {
-    id: 'british_rule',
-    name: 'British Colonial Period',
-    name_pa: 'ਬ੍ਰਿਟਿਸ਼ ਬਸਤੀਵਾਦੀ ਕਾਲ',
-    startYear: 1849,
-    endYear: 1947,
-    description: 'Period of British rule and Sikh reform movements',
-    description_pa: 'ਬ੍ਰਿਟਿਸ਼ ਸ਼ਾਸਨ ਅਤੇ ਸਿੱਖ ਸੁਧਾਰ ਲਹਿਰਾਂ ਦਾ ਕਾਲ',
-    color: 'bg-green-600',
-    icon: Building
-  },
-  {
-    id: 'modern_era',
-    name: 'Modern Era',
-    name_pa: 'ਆਧੁਨਿਕ ਯੁੱਗ',
-    startYear: 1947,
-    endYear: 2024,
-    description: 'Independence and contemporary Sikh history',
-    description_pa: 'ਆਜ਼ਾਦੀ ਅਤੇ ਸਮਕਾਲੀ ਸਿੱਖ ਇਤਿਹਾਸ',
-    color: 'bg-purple-600',
-    icon: Clock
-  }
-];
 
 const EraTimeline = () => {
   const { t, currentLanguage } = useLanguage();
@@ -185,52 +104,16 @@ const EraTimeline = () => {
         </p>
       </div>
 
-      {/* Era Selection */}
+      {/* Era Timeline Selector */}
       <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-sikh-amber/20">
-        <h3 className="text-xl font-bold text-sikh-blue mb-4 flex items-center">
+        <h3 className="text-xl font-bold text-sikh-blue mb-6 flex items-center justify-center">
           <Clock className="w-5 h-5 mr-2 text-sikh-amber" />
-          Historical Eras
+          Historical Timeline
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-          <Button
-            variant={selectedEra === 'all' ? 'default' : 'outline'}
-            onClick={() => setSelectedEra('all')}
-            className="h-auto p-4 text-left justify-start"
-          >
-            <div>
-              <div className="font-semibold">All Eras</div>
-              <div className="text-sm opacity-70">Complete timeline</div>
-            </div>
-          </Button>
-          {eras.map((era) => {
-            const IconComponent = era.icon;
-            return (
-              <Button
-                key={era.id}
-                variant={selectedEra === era.id ? 'default' : 'outline'}
-                onClick={() => setSelectedEra(era.id)}
-                className="h-auto p-4 text-left justify-start"
-              >
-                <div className="flex items-start space-x-3">
-                  <div className={`w-8 h-8 rounded-full ${era.color} flex items-center justify-center flex-shrink-0`}>
-                    <IconComponent className="w-4 h-4 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-semibold">
-                      {currentLanguage === 'en' ? era.name : era.name_pa}
-                    </div>
-                    <div className="text-sm opacity-70">
-                      {era.startYear} - {era.endYear}
-                    </div>
-                    <div className="text-xs opacity-60 mt-1">
-                      {currentLanguage === 'en' ? era.description : era.description_pa}
-                    </div>
-                  </div>
-                </div>
-              </Button>
-            );
-          })}
-        </div>
+        <EraTimelineSelector 
+          selectedEra={selectedEra} 
+          onEraSelect={setSelectedEra} 
+        />
       </div>
 
       {/* Filters */}

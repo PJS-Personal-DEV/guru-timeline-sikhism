@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useEventManagement } from '@/hooks/useEventManagement';
 import { TimelineEvent as TimelineEventType } from '@/data/sikhHistory';
+import { eras } from '../EraTimelineSelector';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -14,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from '@/hooks/use-toast';
-import { ArrowLeft, Save, Plus, X, Edit } from 'lucide-react';
+import { ArrowLeft, Save, Plus, X, Edit, Clock } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -44,8 +45,14 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
   // Find the event if we're editing
   const existingEvent = eventId ? getEvent(eventId) : null;
   
+  // Helper function to determine era based on year
+  const getEraForYear = (year: number): string => {
+    const era = eras.find(e => year >= e.startYear && year <= e.endYear);
+    return era ? era.id : 'modern_era';
+  };
+  
   // Define the event form state with proper typing
-  const [formData, setFormData] = useState<TimelineEventType>({
+  const [formData, setFormData] = useState<TimelineEventType & { historicalEra?: string }>({
     id: existingEvent?.id || `event_${Date.now()}`,
     year: existingEvent?.year || new Date().getFullYear(),
     title_en: existingEvent?.title_en || '',
@@ -55,11 +62,18 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
     category: existingEvent?.category || 'general',
     important: existingEvent?.important || false,
     tags: existingEvent?.tags || [],
+    historicalEra: getEraForYear(existingEvent?.year || new Date().getFullYear())
   });
   
   useEffect(() => {
     setActiveTab(currentLanguage === 'en' ? 'english' : 'punjabi');
   }, [currentLanguage]);
+
+  // Update era when year changes
+  useEffect(() => {
+    const newEra = getEraForYear(formData.year);
+    setFormData(prev => ({ ...prev, historicalEra: newEra }));
+  }, [formData.year]);
   
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -73,6 +87,8 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
       setFormData(prev => ({ ...prev, [name]: value === 'true' }));
     } else if (name === 'category') {
       setFormData(prev => ({ ...prev, [name]: value as TimelineEventType['category'] }));
+    } else if (name === 'historicalEra') {
+      setFormData(prev => ({ ...prev, [name]: value }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
@@ -138,16 +154,18 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
       return;
     }
     
-    // Save the event
+    // Save the event (remove historicalEra from saved data as it's just for UI)
     try {
+      const { historicalEra, ...eventData } = formData;
+      
       if (isNew) {
-        addEvent(formData);
+        addEvent(eventData);
         toast({
           title: t('eventCreated'),
           description: t('eventCreatedDescription'),
         });
       } else {
-        updateEvent(formData.id, formData);
+        updateEvent(eventData.id, eventData);
         toast({
           title: t('eventUpdated'),
           description: t('eventUpdatedDescription'),
@@ -156,7 +174,7 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
       
       // Call the onSave callback if provided
       if (onSave) {
-        onSave(formData);
+        onSave(eventData);
       }
       
       onBack();
@@ -168,6 +186,8 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
       });
     }
   };
+  
+  const selectedEra = eras.find(era => era.id === formData.historicalEra);
   
   return (
     <div>
@@ -195,7 +215,7 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
           </CardHeader>
           
           <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div>
                 <Label htmlFor="year">{t('year')}</Label>
                 <Input
@@ -248,6 +268,38 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
                     <SelectItem value="true">{t('high')}</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="historicalEra">Historical Era</Label>
+                <Select
+                  value={formData.historicalEra}
+                  onValueChange={(value) => handleSelectChange('historicalEra', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Era" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {eras.map((era) => (
+                      <SelectItem key={era.id} value={era.id}>
+                        {currentLanguage === 'en' ? era.name : era.name_pa} ({era.startYear}-{era.endYear})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {selectedEra && (
+                  <div className="mt-2 p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center text-sm text-gray-600">
+                      <Clock className="w-4 h-4 mr-2" />
+                      <span className="font-medium">
+                        {currentLanguage === 'en' ? selectedEra.name : selectedEra.name_pa}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {currentLanguage === 'en' ? selectedEra.description : selectedEra.description_pa}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 
