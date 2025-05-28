@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Select,
   SelectContent,
@@ -14,8 +15,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { toast } from '@/hooks/use-toast';
-import { ArrowLeft, Save, Plus, X, Edit, Clock } from 'lucide-react';
+import { ArrowLeft, Save, Plus, X, Edit, Clock, Calendar as CalendarIcon } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -26,6 +32,9 @@ import {
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 interface EventEditorProps {
   eventId: string | null;
@@ -41,6 +50,8 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
   const [newTag, setNewTag] = useState('');
   const [editingTagIndex, setEditingTagIndex] = useState<number | null>(null);
   const [editingTagValue, setEditingTagValue] = useState('');
+  const [hasExactDate, setHasExactDate] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   
   // Find the event if we're editing
   const existingEvent = eventId ? getEvent(eventId) : null;
@@ -52,7 +63,11 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
   };
   
   // Define the event form state with proper typing
-  const [formData, setFormData] = useState<TimelineEventType & { historicalEra?: string }>({
+  const [formData, setFormData] = useState<TimelineEventType & { 
+    historicalEra?: string;
+    exactDate?: string;
+    hasExactDate?: boolean;
+  }>({
     id: existingEvent?.id || `event_${Date.now()}`,
     year: existingEvent?.year || new Date().getFullYear(),
     title_en: existingEvent?.title_en || '',
@@ -62,12 +77,21 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
     category: existingEvent?.category || 'general',
     important: existingEvent?.important || false,
     tags: existingEvent?.tags || [],
-    historicalEra: getEraForYear(existingEvent?.year || new Date().getFullYear())
+    historicalEra: getEraForYear(existingEvent?.year || new Date().getFullYear()),
+    exactDate: existingEvent?.exactDate || '',
+    hasExactDate: !!existingEvent?.exactDate
   });
   
   useEffect(() => {
     setActiveTab(currentLanguage === 'en' ? 'english' : 'punjabi');
   }, [currentLanguage]);
+
+  useEffect(() => {
+    setHasExactDate(!!formData.hasExactDate);
+    if (formData.exactDate) {
+      setSelectedDate(new Date(formData.exactDate));
+    }
+  }, [formData.hasExactDate, formData.exactDate]);
 
   // Update era when year changes
   useEffect(() => {
@@ -91,6 +115,29 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
       setFormData(prev => ({ ...prev, [name]: value }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleDateToggle = (checked: boolean) => {
+    setHasExactDate(checked);
+    setFormData(prev => ({ ...prev, hasExactDate: checked }));
+    if (!checked) {
+      setSelectedDate(undefined);
+      setFormData(prev => ({ ...prev, exactDate: '' }));
+    }
+  };
+
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+    if (date) {
+      const year = date.getFullYear();
+      setFormData(prev => ({ 
+        ...prev, 
+        exactDate: date.toISOString(),
+        year: year
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, exactDate: '' }));
     }
   };
 
@@ -154,9 +201,9 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
       return;
     }
     
-    // Save the event (remove historicalEra from saved data as it's just for UI)
+    // Save the event (remove UI-only fields from saved data)
     try {
-      const { historicalEra, ...eventData } = formData;
+      const { historicalEra, hasExactDate, ...eventData } = formData;
       
       if (isNew) {
         addEvent(eventData);
@@ -215,21 +262,62 @@ const EventEditor: React.FC<EventEditorProps> = ({ eventId, isNew, onBack, onSav
           </CardHeader>
           
           <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div>
-                <Label htmlFor="year">{t('year')}</Label>
-                <Input
-                  id="year"
-                  name="year"
-                  type="number"
-                  min="1400"
-                  max="2100"
-                  value={formData.year}
-                  onChange={handleInputChange}
-                  required
+            {/* Date/Year Section */}
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="exact-date"
+                  checked={hasExactDate}
+                  onCheckedChange={handleDateToggle}
                 />
+                <Label htmlFor="exact-date">Use exact date instead of year only</Label>
               </div>
               
+              {hasExactDate ? (
+                <div>
+                  <Label>Select Date</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !selectedDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={handleDateSelect}
+                        initialFocus
+                        className="pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              ) : (
+                <div>
+                  <Label htmlFor="year">{t('year')}</Label>
+                  <Input
+                    id="year"
+                    name="year"
+                    type="number"
+                    min="1400"
+                    max="2100"
+                    value={formData.year}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <Label htmlFor="category">{t('category')}</Label>
                 <Select

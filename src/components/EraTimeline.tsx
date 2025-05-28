@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import TimelineEvent from './TimelineEvent';
 import EraTimelineSelector, { eras } from './EraTimelineSelector';
+import HistoricalTimeline from './HistoricalTimeline';
 import { useEventManagement } from '@/hooks/useEventManagement';
 import { TimelineEvent as TimelineEventType } from '@/data/sikhHistory';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ const EraTimeline = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedImportance, setSelectedImportance] = useState<string>('all');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [selectedEvent, setSelectedEvent] = useState<TimelineEventType | null>(null);
 
   const categoryIcons = {
     guru: Users,
@@ -81,6 +83,15 @@ const EraTimeline = () => {
     setFilteredEvents(filtered);
   }, [events, selectedEra, searchTerm, selectedCategory, selectedImportance, sortOrder, currentLanguage]);
 
+  const handleEventSelect = (event: TimelineEventType) => {
+    setSelectedEvent(event);
+    // Scroll to the event in the detailed timeline
+    const eventElement = document.getElementById(`event-${event.id}`);
+    if (eventElement) {
+      eventElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -108,11 +119,19 @@ const EraTimeline = () => {
       <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-sikh-amber/20">
         <h3 className="text-xl font-bold text-sikh-blue mb-6 flex items-center justify-center">
           <Clock className="w-5 h-5 mr-2 text-sikh-amber" />
-          Historical Timeline
+          Historical Eras
         </h3>
         <EraTimelineSelector 
           selectedEra={selectedEra} 
           onEraSelect={setSelectedEra} 
+        />
+      </div>
+
+      {/* Enhanced Historical Timeline */}
+      <div className="mb-8">
+        <HistoricalTimeline 
+          selectedEra={selectedEra}
+          onEventSelect={handleEventSelect}
         />
       </div>
 
@@ -201,7 +220,7 @@ const EraTimeline = () => {
         </div>
       </div>
 
-      {/* Timeline with central line */}
+      {/* Detailed Timeline Events */}
       <div className="relative max-w-6xl mx-auto">
         {/* Central timeline line */}
         <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-sikh-amber via-sikh-gold to-sikh-amber shadow-lg hidden md:block"></div>
@@ -214,14 +233,18 @@ const EraTimeline = () => {
             filteredEvents.map((event, index) => {
               const IconComponent = categoryIcons[event.category] || Calendar;
               return (
-                <div key={event.id} className="relative">
+                <div key={event.id} id={`event-${event.id}`} className="relative">
                   {/* Timeline dot */}
-                  <div className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-sikh-blue rounded-full border-4 border-white shadow-lg z-10 hidden md:flex items-center justify-center">
+                  <div className={`absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-sikh-blue rounded-full border-4 border-white shadow-lg z-10 hidden md:flex items-center justify-center ${
+                    selectedEvent?.id === event.id ? 'ring-4 ring-sikh-amber/50 scale-125' : ''
+                  }`}>
                     <div className="w-2 h-2 bg-sikh-amber rounded-full animate-pulse"></div>
                   </div>
                   
                   {/* Mobile timeline dot */}
-                  <div className="absolute left-6 w-6 h-6 bg-sikh-blue rounded-full border-4 border-white shadow-lg z-10 md:hidden flex items-center justify-center">
+                  <div className={`absolute left-6 w-6 h-6 bg-sikh-blue rounded-full border-4 border-white shadow-lg z-10 md:hidden flex items-center justify-center ${
+                    selectedEvent?.id === event.id ? 'ring-4 ring-sikh-amber/50 scale-125' : ''
+                  }`}>
                     <div className="w-2 h-2 bg-sikh-amber rounded-full animate-pulse"></div>
                   </div>
                   
